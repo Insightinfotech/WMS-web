@@ -13,9 +13,27 @@ const routes = [{
     name: 'Home',
     component: Home,
     children: [{
-      path: "/home/system/roles",
-      component: () => import("../views/system/Roles")
-    }]
+        path: "/home/system/roles",
+        component: () => import("../views/system/Roles")
+      },
+      {
+        path: "/home/system/unit",
+        component: () => import("../views/system/Unit")
+      },
+      {
+        path: "/home/warehouse/management",
+        component: () => import("../views/warehouse/Management")
+      },
+      {
+        path: "/home/warehouse/reservoir",
+        component: () => import("../views/warehouse/Reservoir")
+      },
+      {
+        path: "/home/warehouse/parcel",
+        component: () => import("../views/warehouse/Parcel")
+      }
+
+    ]
   },
   {
     path: "/login",
@@ -29,10 +47,10 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-router.beforeEach((to, from, next) => {
-  if (to.path == "/login") return next()
-  let token = sessionStorage.getItem("token")
-  if (!token) return next("/login")
-  next()
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.path == "/login") return next()
+//   let token = sessionStorage.getItem("token")
+//   if (!token) return next("/login")
+//   next()
+// })
 export default router

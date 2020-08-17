@@ -11,6 +11,30 @@ import {
   removeUserId,
   editUser
 } from "api/helpers/home/roles"
+import {
+  getCaterogyList,
+  unitUserDelete,
+  unitTypeList,
+  unitTypeadd,
+  unitTypeDelete,
+  addUserUnit,
+  unitSearchName,
+  unitTypeEdit,
+  unitUserAddEdit
+} from "api/helpers/home/unit"
+import {
+  getManagementList,
+  managementAdd,
+  managementDelete,
+  managementAddEdit,
+  managementAddEditPut
+} from "api/helpers/warehouse/management"
+import {
+  getReservoirList,
+  reservoirAdd,
+  reservoirIdDelete,
+  reservoirAddEdit
+} from "api/helpers/warehouse/reservoir"
 class NetworkPlugin {
   install(Vue) {
     Vue.prototype.$network = {
@@ -25,6 +49,32 @@ class NetworkPlugin {
           removeRolesId,
           removeUserId,
           editUser
+        },
+        unit: {
+          getCaterogyList,
+          unitUserDelete,
+          unitTypeList,
+          unitTypeadd,
+          unitTypeDelete,
+          addUserUnit,
+          unitSearchName,
+          unitTypeEdit,
+          unitUserAddEdit
+        }
+      },
+      warehouse: {
+        management: {
+          getManagementList,
+          managementAdd,
+          managementDelete,
+          managementAddEdit,
+          managementAddEditPut
+        },
+        reservoir: {
+          getReservoirList,
+          reservoirAdd,
+          reservoirIdDelete,
+          reservoirAddEdit
         }
       }
     }

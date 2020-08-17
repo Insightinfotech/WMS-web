@@ -130,9 +130,9 @@ export function removeUserId(uid) {
     })
   })
 }
-export function editUser(id,datasd,roleIds) {
+export function editUser(id,username,roleIds) {
   return new Promise((resolve, reject) => {
-    Roles.editUser(id,datasd,roleIds).then(res => {
+    Roles.editUser(id,username,roleIds).then(res => {
       resolve(res)
     }).catch(err => {
       reject(err)

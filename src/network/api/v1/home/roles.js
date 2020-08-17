@@ -138,13 +138,13 @@ export default class Roles {
       token: store.getters.userToken
     })
   }
-  static editUser(id,datasd,roleIds) {
+  static editUser(id,username,roleIds) {
     return request({
       url: "/user/update",
       method: "PUT",
       data: {
         id,
-        datasd,
+        username,
         roleIds
       }
     }, {

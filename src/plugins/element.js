@@ -37,6 +37,8 @@ import {
   Tag,
   CheckboxButton,
   CheckboxGroup,
+  Cascader 
+  
 } from "element-ui"
 Vue.use(Button)
   .use(Tabs)
@@ -72,6 +74,7 @@ Vue.use(Button)
   .use(Tag)
   .use(CheckboxButton)
   .use(CheckboxGroup)
+  .use(Cascader)
 
 
 

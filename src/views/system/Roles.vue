@@ -478,10 +478,10 @@
       // 编辑添加sd
       edituserRoles() {
         let id = this.rolesId
-        let datasd = this.editData.username
+        let username = this.editData.username
         let roleIds = this.checkList
         // console.log(data, rolelds);
-        this.$network.home.roles.editUser(id, datasd, roleIds).then(res => {
+        this.$network.home.roles.editUser(id, username, roleIds).then(res => {
           // console.log(res);
           if (res.code === 0) {
             this.$notify({
@@ -509,12 +509,6 @@
     created() {
       this.getuserlist()
       this.getRolesList()
-    },
-    filters: {
-      dateTimeFormat(val) {
-        const date = new Date(val)
-        return date.toLocaleString() || "非法日期"
-      }
     }
   }
 

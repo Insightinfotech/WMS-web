@@ -9,6 +9,12 @@ import VueParticles from 'vue-particles'
 import networkPlugin from "plugins/NetworkPlugin"
 Vue.use(networkPlugin)
 Vue.use(VueParticles)
+// 全局时间过滤器
+Vue.filter('dateTimeFormat', (val) => {
+  const date = new Date(val)
+  return date.toLocaleString() || "非法日期"
+})
+
 Vue.config.productionTip = false
 
 new Vue({
