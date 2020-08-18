@@ -94,4 +94,28 @@ export default class Management {
       token: store.getters.userToken
     })
   }
+  static showReservoirs(wid) {
+    return request({
+      url: `/warehouse/showReservoirs/${wid}`,
+      method: "GET"
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static optionReservoirsAdd(wid, rid) {
+    return request({
+      url: `/warehouse/optionReservoirs/add/${wid}/${rid}`,
+      method: "PUT"
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static optionReservoirsDelete(wid, rid) {
+    return request({
+      url: `/warehouse/optionReservoirs/delete/${wid}/${rid}`,
+      method: "DELETE"
+    }, {
+      token: store.getters.userToken
+    })
+  }
 }

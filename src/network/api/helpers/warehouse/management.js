@@ -94,3 +94,30 @@ export function managementAddEditPut({
     })
   })
 }
+export function showReservoirs(wid) {
+  return new Promise((resolve, reject) => {
+    Management.showReservoirs(wid).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function optionReservoirsAdd(wid, rid) {
+  return new Promise((resolve, reject) => {
+    Management.optionReservoirsAdd(wid, rid).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function optionReservoirsDelete(wid, rid) {
+  return new Promise((resolve, reject) => {
+    Management.optionReservoirsDelete(wid, rid).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}

@@ -94,7 +94,8 @@
             </el-table-column> -->
             <el-table-column prop="address" align="center" label="操作" width="300">
               <template slot-scope="scope">
-                <el-button icon="el-icon-menu" size="mini" type="primary">查看</el-button>
+                <el-button icon="el-icon-menu" size="mini" type="primary" @click="managementSearchKuqu(scope.row.id)">查看
+                </el-button>
                 <el-button icon="el-icon-edit" size="mini" type="info" @click="managementAddEdit(scope.row.id)">编辑
                 </el-button>
                 <el-button icon="el-icon-delete" size="mini" type="danger" @click="managementDelete(scope.row.id)">删除
@@ -179,6 +180,59 @@
         <el-button type="primary" @click="managementAddUserEdit('ruleFormEdit')">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 查看库区弹框 -->
+    <el-dialog title="查看库区" :visible.sync="dialogVisibleSearch" @close="kuquClose" width="70%">
+      <div class="dialogVisibleSearchkuqu">
+        <template>
+          <el-table class="tables_ps" :data="reservoirVOSdata">
+
+            <el-table-column label="已绑定库区">
+              <el-table-column align="center" label="库区编码">
+                <template slot-scope="scope">
+                  <el-button size="mini" type="text">{{scope.row.code}}</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="库区名称">
+                <template slot-scope="scope">
+                  <el-button size="mini" type="text">{{scope.row.name}}</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="所属仓库">
+                <template slot-scope="scope">
+                  <el-tag size="small">{{scope.row.warehouseVO.name}}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="操作">
+                <template slot-scope="scope">
+                  <el-button size="mini" type="danger" @click="addkuquDelete(scope.row.id)">移除</el-button>
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </template>
+        <template>
+          <el-table class="tables_ps" border :data="whNullResVOSdata">
+            <el-table-column label="未绑定库区">
+              <el-table-column align="center" label="库区名称">
+                <template slot-scope="scope">
+                  <el-tag size="small">{{scope.row.name}}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" prop="address" label="操作">
+                <template slot-scope="scope">
+                  <el-button type="success" size="small" @click="addkuqu(scope.row.id)">添加</el-button>
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </template>
+
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleSearch = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -195,9 +249,7 @@
           remark: "",
           categoryId: [],
         },
-        addmanagementEdit: {
-
-        },
+        addmanagementEdit: {},
         activeName: "first",
         input3: "",
         input: "",
@@ -208,6 +260,7 @@
         managementList: [],
         dialogVisible: false,
         dialogVisibleEdit: false,
+        dialogVisibleSearch: false,
         options: [],
         optionsProps: {
           label: "name",
@@ -280,10 +333,97 @@
             message: '请选择字典',
             trigger: 'change'
           }]
-        }
+        },
+        reservoirVOSdata: [],
+        whNullResVOSdata: [],
+        kuquId: "",
       }
     },
     methods: {
+      // 查看库区
+      managementSearchKuqu(id) {
+        this.kuquId = id
+        this.dialogVisibleSearch = true
+        this.$network.warehouse.management.showReservoirs(id).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.reservoirVOSdata = res.data.reservoirVOS
+            this.whNullResVOSdata = res.data.whNullResVOS
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 添加库区
+      addkuqu(id) {
+        let wid = this.kuquId
+        // console.log(wid);
+        // console.log(id);
+        this.$network.warehouse.management.optionReservoirsAdd(wid, id).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "成功",
+              message: "添加到本仓库成功",
+              type: "success"
+            })
+            this.managementSearchKuqu(this.kuquId)
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 删除库区
+      addkuquDelete(id) {
+        let wid = this.kuquId
+
+        this.$network.warehouse.management.optionReservoirsDelete(wid, id).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "成功",
+              message: "删除关联库区成功",
+              type: "success"
+            })
+            this.managementSearchKuqu(this.kuquId)
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      kuquClose() {
+        this.kuquId = ""
+      },
       // 获取仓库列表
       getManagementList() {
         this.$network.warehouse.management.getManagementList({
@@ -546,6 +686,17 @@
 </script>
 <style lang="scss" scoped>
   .management {
+    .dialogVisibleSearchkuqu {
+      display: flex;
+
+      .tables_ps {
+        margin-left: 10px;
+      }
+
+      .tables_ps::before {
+        background-color: #fff;
+      }
+    }
 
     .input-with-select {
       width: 15%;

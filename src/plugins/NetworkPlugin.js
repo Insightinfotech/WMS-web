@@ -27,7 +27,10 @@ import {
   managementAdd,
   managementDelete,
   managementAddEdit,
-  managementAddEditPut
+  managementAddEditPut,
+  showReservoirs,
+  optionReservoirsAdd,
+  optionReservoirsDelete
 } from "api/helpers/warehouse/management"
 import {
   getReservoirList,
@@ -68,7 +71,10 @@ class NetworkPlugin {
           managementAdd,
           managementDelete,
           managementAddEdit,
-          managementAddEditPut
+          managementAddEditPut,
+          showReservoirs,
+          optionReservoirsAdd,
+          optionReservoirsDelete
         },
         reservoir: {
           getReservoirList,
