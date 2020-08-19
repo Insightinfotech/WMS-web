@@ -36,8 +36,19 @@ import {
   getReservoirList,
   reservoirAdd,
   reservoirIdDelete,
-  reservoirAddEdit
+  reservoirAddEdit,
+  getReservoirById,
+  showShelves,
+  optionShelves,
+  optionShelvesDelete
 } from "api/helpers/warehouse/reservoir"
+import {
+  parcelList,
+  parcelUserAdd,
+  parcelUserEdit,
+  getShelvesById,
+  shelvesDelete
+} from "api/helpers/warehouse/parcel"
 class NetworkPlugin {
   install(Vue) {
     Vue.prototype.$network = {
@@ -80,7 +91,18 @@ class NetworkPlugin {
           getReservoirList,
           reservoirAdd,
           reservoirIdDelete,
-          reservoirAddEdit
+          reservoirAddEdit,
+          getReservoirById,
+          showShelves,
+          optionShelves,
+          optionShelvesDelete
+        },
+        Parcel: {
+          parcelList,
+          parcelUserAdd,
+          parcelUserEdit,
+          getShelvesById,
+          shelvesDelete
         }
       }
     }

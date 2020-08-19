@@ -77,3 +77,39 @@ export function reservoirAddEdit({
     })
   })
 }
+export function getReservoirById(rid) {
+  return new Promise((resolve, reject) => {
+    Reservoir.getReservoirById(rid).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function showShelves(rid) {
+  return new Promise((resolve, reject) => {
+    Reservoir.showShelves(rid).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function optionShelves(wid, rid) {
+  return new Promise((resolve, reject) => {
+    Reservoir.optionShelves(wid, rid).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function optionShelvesDelete(wid, rid) {
+  return new Promise((resolve, reject) => {
+    Reservoir.optionShelvesDelete(wid, rid).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}

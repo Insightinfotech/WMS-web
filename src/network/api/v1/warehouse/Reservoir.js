@@ -45,10 +45,10 @@ export default class Reservoir {
       token: store.getters.userToken
     })
   }
-  static reservoirIdDelete(id) {
+  static reservoirIdDelete(rid) {
     return request({
-      url: ``,
-      methid: "DELETE"
+      url: `/reservoir/delete/${rid}`,
+      method: "DELETE"
     }, {
       token: store.getters.userToken
     })
@@ -74,6 +74,38 @@ export default class Reservoir {
         warehouseId,
         categoryId
       }
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static getReservoirById(rid) {
+    return request({
+      url: `/reservoir/getReservoirById/${rid}`,
+      method: "GET"
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static showShelves(rid) {
+    return request({
+      url: `/reservoir/showShelves/${rid}`,
+      method: "GET"
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static optionShelves(wid, rid) {
+    return request({
+      url: `/reservoir/optionShelves/add/${wid}/${rid}`,
+      method: "PUT"
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static optionShelvesDelete(wid, rid) {
+    return request({
+      url: `/reservoir/optionShelves/delete/${wid}/${rid}`,
+      method: "DELETE"
     }, {
       token: store.getters.userToken
     })

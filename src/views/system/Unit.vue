@@ -548,7 +548,7 @@
                 this.classify.name = ""
                 this.getTypeList()
                 this.dialogVisibleclassify = false
-
+                this.getUnitlist()
               } else {
                 this.$notify({
                   title: "失败",
@@ -591,6 +591,7 @@
                 this.pageNums--
               }
               this.getTypeList()
+              this.getUnitlist()
             } else {
               this.$notify({
                 title: "失败",

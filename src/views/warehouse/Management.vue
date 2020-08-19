@@ -230,7 +230,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleSearch = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="dialogVisibleSearch = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -590,7 +590,7 @@
       },
       // 删除
       managementDelete(id) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将删除所绑定的库区和货架, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

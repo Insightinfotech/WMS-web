@@ -90,7 +90,8 @@
             </el-table-column>
             <el-table-column prop="address" align="center" label="操作" width="300">
               <template slot-scope="scope">
-                <el-button icon="el-icon-menu" size="mini" type="primary">查看</el-button>
+                <el-button icon="el-icon-menu" size="mini" type="primary" @click="reservoirSearchHoujia(scope.row.id)">
+                  查看</el-button>
                 <el-button icon="el-icon-edit" size="mini" type="info" @click="reservoirAddEdit(scope.row.id)">编辑
                 </el-button>
                 <el-button icon="el-icon-delete" size="mini" type="danger" @click="reservoirDelete(scope.row.id)">删除
@@ -138,7 +139,7 @@
       </span>
     </el-dialog>
     <!-- 编辑回显 -->
-    <el-dialog title="添加仓库" @close="addreservoirCloseEdit" :visible.sync="dialogVisibleEdit" width="25%">
+    <el-dialog title="编辑库区" @close="addreservoirCloseEdit" :visible.sync="dialogVisibleEdit" width="25%">
       <el-form :model="addreservoirEdit" ref="ruleFormEdit" :rules="rulesEdit" label-width="100px"
         class="demo-ruleForm">
         <el-form-item label="仓库编号" prop="code">
@@ -151,7 +152,7 @@
           <el-input v-model="addreservoirEdit.acreage"></el-input>
         </el-form-item>
         <el-form-item label="所属仓库" prop="warehouseId">
-          <el-select v-model="addreservoirEdit.warehouseId" placeholder="请选择所属仓库">
+          <el-select v-model="addreservoirEdit.warehouseVO" placeholder="请选择所属仓库">
             <el-option v-for="item in ReservoirKuqu" :key="item.value" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
@@ -159,14 +160,66 @@
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="addreservoirEdit.remark"></el-input>
         </el-form-item>
-        <el-form-item label="字典" prop="categoryId">
-          <el-cascader v-model="addreservoirEdit.categoryId" :options="options" :props="optionsProps">
+        <el-form-item label="字典" prop="selectedCategory">
+          <el-cascader v-model="addreservoirEdit.selectedCategory" :options="options" :props="optionsProps">
           </el-cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleEdit = false">取 消</el-button>
-        <el-button type="primary" @click="reservoirAddUserEdit('ruleForm')">确 定</el-button>
+        <el-button type="primary" @click="reservoirAddUserEdit('ruleFormEdit')">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 查看库区 -->
+    <el-dialog title="查看库区" :visible.sync="dialogVisibleSearch" @close="kuquClose" width="70%">
+      <div class="dialogVisibleSearchkuqu">
+        <template>
+          <el-table class="tables_ps" :data="reservoirVOSdata">
+            <el-table-column label="已绑定货架">
+              <el-table-column align="center" label="货架编码">
+                <template slot-scope="scope">
+                  <el-button size="mini" type="text">{{scope.row.code}}</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="货架名称">
+                <template slot-scope="scope">
+                  <el-button size="mini" type="text">{{scope.row.name}}</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="所属库区">
+                <template slot-scope="scope">
+                  <el-tag size="small">{{scope.row.reservoir.name}}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="操作">
+                <template slot-scope="scope">
+                  <el-button size="mini" type="danger" @click="addkuquDelete(scope.row.id)">移除</el-button>
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </template>
+        <template>
+          <el-table class="tables_ps" border :data="whNullResVOSdata">
+            <el-table-column label="未绑定货架">
+              <el-table-column align="center" label="货架名称">
+                <template slot-scope="scope">
+                  <el-tag size="small">{{scope.row.name}}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" prop="address" label="操作">
+                <template slot-scope="scope">
+                  <el-button type="success" size="small" @click="addkuqu(scope.row.id)">添加</el-button>
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </template>
+
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleSearch = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisibleSearch = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -188,6 +241,7 @@
         total: 0,
         dialogVisible: false,
         dialogVisibleEdit: false,
+        dialogVisibleSearch: false,
         addreservoir: {
           code: "",
           name: "",
@@ -196,7 +250,11 @@
           remark: "",
           categoryId: []
         },
-        addreservoirEdit: {},
+        addreservoirEdit: {
+          // warehouseVO: {
+          //   id: ""
+          // }
+        },
         rules: {
           code: [{
             required: true,
@@ -210,7 +268,7 @@
           }],
           categoryId: [{
             required: true,
-            message: '请输入仓库负责人',
+            message: '请输入仓库字典',
             trigger: 'change'
           }],
         },
@@ -225,9 +283,9 @@
             message: '请输入库区名称',
             trigger: 'blur'
           }],
-          categoryId: [{
+          selectedCategory: [{
             required: true,
-            message: '请输入仓库负责人',
+            message: '请输入仓库字典',
             trigger: 'change'
           }],
         },
@@ -236,10 +294,91 @@
           value: "id",
           children: "categories",
           expandTrigger: "hover"
-        }
+        },
+        reservoirVOSdata: [],
+        whNullResVOSdata: [],
+        huoId: ""
       }
     },
     methods: {
+      // 查看货架
+      reservoirSearchHoujia(id) {
+        this.huoId = id
+        this.dialogVisibleSearch = true
+        this.$network.warehouse.reservoir.showShelves(id).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.reservoirVOSdata = res.data.shelvesVOS
+            this.whNullResVOSdata = res.data.ResNullSheVOS
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 添加货架
+      addkuqu(id) {
+        let wid = this.huoId
+        this.$network.warehouse.reservoir.optionShelves(wid, id).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "成功",
+              message: "添加到本库区成功",
+              type: "success"
+            })
+            this.reservoirSearchHoujia(this.huoId)
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 删除货架
+      addkuquDelete(id) {
+        let wid = this.huoId
+        this.$network.warehouse.reservoir.optionShelvesDelete(wid, id).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "成功",
+              message: "删除关联货架成功",
+              type: "success"
+            })
+            this.reservoirSearchHoujia(this.huoId)
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
       // 获取库区列表
       getReservoirList() {
         this.$network.warehouse.reservoir.getReservoirList({
@@ -334,9 +473,74 @@
       // 回显
       reservoirAddEdit(id) {
         this.dialogVisibleEdit = true
+        this.$network.warehouse.reservoir.getReservoirById(id).then(res => {
+          console.log(res);
+          if (res.code === 0) {
+            if (res.data.reservoirVO.warehouseVO != null) {
+              res.data.reservoirVO.warehouseVO = res.data.reservoirVO.warehouseVO.id
+            }
+            this.addreservoirEdit = res.data.reservoirVO
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
       },
       // 回显添加
-      reservoirAddUserEdit(ruleFormEdit) {},
+      reservoirAddUserEdit(ruleFormEdit) {
+        this.$refs[ruleFormEdit].validate((valid) => {
+          if (valid) {
+            this.$network.warehouse.reservoir.reservoirAddEdit({
+              id: this.addreservoirEdit.id,
+              code: this.addreservoirEdit.code,
+              name: this.addreservoirEdit.name,
+              acreage: this.addreservoirEdit.acreage,
+              remark: this.addreservoirEdit.remark,
+              warehouseId: this.addreservoirEdit.warehouseVO == null ? '' : this.addreservoirEdit.warehouseVO,
+              categoryId: this.addreservoirEdit.selectedCategory[1]
+            }).then(res => {
+              console.log(res);
+              if (res.code === 0) {
+                this.$notify({
+                  title: "成功",
+                  message: "编辑库区成功",
+                  type: "success"
+                })
+                this.dialogVisibleEdit = false
+                this.$refs[ruleFormEdit].resetFields();
+                this.getReservoirList()
+              } else {
+                this.$notify({
+                  title: "失败",
+                  message: res.msg,
+                  type: "error"
+                })
+              }
+            }).catch(err => {
+              this.$notify({
+                title: "失败",
+                message: err,
+                type: "error"
+              })
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: "请填写完整信息",
+              showClose: true
+            })
+          }
+        })
+      },
       // 关闭弹框回调
       addreservoirClose() {
         this.$refs["ruleForm"].resetFields();
@@ -344,6 +548,9 @@
       // 回显关闭的弹框
       addreservoirCloseEdit() {
         this.$refs["ruleFormEdit"].resetFields();
+      },
+      kuquClose() {
+        this.huoId = ""
       },
       // 搜索
       reservoirSearch() {
@@ -394,8 +601,8 @@
       },
       // 删除
       reservoirDelete(id) {
-        console.log(id);
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        // console.log(id);
+        this.$confirm('此操作将删除所绑定的货架, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -442,6 +649,18 @@
 </script>
 <style lang="scss" scoped>
   .reservoir {
+    .dialogVisibleSearchkuqu {
+      display: flex;
+
+      .tables_ps {
+        margin-left: 10px;
+      }
+
+      .tables_ps::before {
+        background-color: #fff;
+      }
+    }
+
     .el-select {
       width: 130px;
     }

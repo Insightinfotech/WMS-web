@@ -81,7 +81,7 @@
                     path: "/home/warehouse/parcel"
                   },
                   itemsIcon: "el-icon-menu",
-                  text: "货件管理"
+                  text: "货架管理"
                 }
               ]
             }]
