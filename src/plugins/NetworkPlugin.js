@@ -49,6 +49,42 @@ import {
   getShelvesById,
   shelvesDelete
 } from "api/helpers/warehouse/parcel"
+import {
+  partnerList,
+  partnerAdd,
+  partnerAddUpdate,
+  partnerSearch,
+  partnerDelete,
+  partnerShowSkus,
+  partnerOptionSku,
+  partneroptionSkuDelete,
+  partnerupdateSkuPrice
+} from "api/helpers/basic/partner"
+import {
+  productTypeList,
+  productTypeAdd,
+  productTypeAddUpdate,
+  productTypeDelete,
+  productTypeEdit,
+  productList,
+  productAdd,
+  productAddUpdate,
+  productDelete,
+  productId
+} from "api/helpers/basic/product"
+// import {} from "ap1/helpers/putwarehouse/inventory"
+import {
+  procurementList,
+  procurementAdd,
+  procurementEditId,
+  procurementEdit,
+  procurementDelete,
+  procurementKuQuList,
+  procurementSkuAdd,
+  procurementDeleteSku,
+  procurementDeleteSkuEditId
+} from "api/helpers/putwarehouse/procurement"
+
 class NetworkPlugin {
   install(Vue) {
     Vue.prototype.$network = {
@@ -103,6 +139,47 @@ class NetworkPlugin {
           parcelUserEdit,
           getShelvesById,
           shelvesDelete
+        }
+      },
+      basic: {
+        partner: {
+          partnerList,
+          partnerAdd,
+          partnerAddUpdate,
+          partnerSearch,
+          partnerDelete,
+          partnerShowSkus,
+          partnerOptionSku,
+          partneroptionSkuDelete,
+          partnerupdateSkuPrice
+        },
+        product: {
+          productTypeList,
+          productTypeAdd,
+          productTypeAddUpdate,
+          productTypeDelete,
+          productTypeEdit,
+          productList,
+          productAdd,
+          productAddUpdate,
+          productDelete,
+          productId
+        }
+      },
+      putwarehouse: {
+        inventory: {
+
+        },
+        procurement: {
+          procurementList,
+          procurementAdd,
+          procurementEditId,
+          procurementEdit,
+          procurementDelete,
+          procurementKuQuList,
+          procurementSkuAdd,
+          procurementDeleteSku,
+          procurementDeleteSkuEditId
         }
       }
     }

@@ -31,8 +31,31 @@ const routes = [{
       {
         path: "/home/warehouse/parcel",
         component: () => import("../views/warehouse/Parcel")
+      },
+      {
+        path: "/home/basic/material",
+        component: () => import("../views/basic/Material")
+      },
+      {
+        path: "/home/basic/product",
+        component: () => import("../views/basic/Product")
+      },
+      {
+        path: "/home/basic/partner",
+        component: () => import("../views/basic/Partner")
+      },
+      {
+        path: "/home/putwarehouse/inventory",
+        component: () => import("../views/putwarehouse/Inventory")
+      },
+      {
+        path: "/home/putwarehouse/orderlist",
+        component: () => import("../views/putwarehouse/Orderlist")
+      },
+      {
+        path: "/home/putwarehouse/procurement",
+        component: () => import("../views/putwarehouse/Procurement")
       }
-
     ]
   },
   {

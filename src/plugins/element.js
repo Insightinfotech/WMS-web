@@ -37,7 +37,10 @@ import {
   Tag,
   CheckboxButton,
   CheckboxGroup,
-  Cascader 
+  Cascader ,
+  Tooltip,
+  Popover,
+  Popconfirm 
   
 } from "element-ui"
 Vue.use(Button)
@@ -75,6 +78,12 @@ Vue.use(Button)
   .use(CheckboxButton)
   .use(CheckboxGroup)
   .use(Cascader)
+  .use(Tooltip)
+  .use(Popover)
+  .use(Popconfirm)
+
+
+
 
 
 

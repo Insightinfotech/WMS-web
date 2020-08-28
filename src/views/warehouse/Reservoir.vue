@@ -28,10 +28,14 @@
                     <el-tag size="mini" type="info">库区名称</el-tag> {{scope.row.name}}
                   </div>
                   <div>
-                    <el-tag size="mini" type="info">所属仓库</el-tag> {{scope.row.warehouseVO.name}}
+                    <el-tag size="mini" type="info">所属仓库</el-tag>
+                    <span v-if="scope.row.warehouseVO == null"></span>
+                    <span v-else>{{scope.row.warehouseVO.name}}</span>
                   </div>
                   <div>
-                    <el-tag size="mini" type="info">所属仓库ID</el-tag> {{scope.row.warehouseVO.id}}
+                    <el-tag size="mini" type="info">所属仓库ID</el-tag>
+                    <span v-if="scope.row.warehouseVO == null"></span>
+                    <span v-else>{{scope.row.warehouseVO.id}}</span>
                   </div>
                   <div>
                     <el-tag size="mini" type="info">库区面积</el-tag> {{scope.row.acreage}}
@@ -173,9 +177,9 @@
     <!-- 查看库区 -->
     <el-dialog title="查看库区" :visible.sync="dialogVisibleSearch" @close="kuquClose" width="70%">
       <div class="dialogVisibleSearchkuqu">
-        <template>
-          <el-table class="tables_ps" :data="reservoirVOSdata">
-            <el-table-column label="已绑定货架">
+        <div class="tables_ps">
+          <el-table :data="reservoirVOSdata">
+            <el-table-column align="center" label="已绑定货架">
               <el-table-column align="center" label="货架编码">
                 <template slot-scope="scope">
                   <el-button size="mini" type="text">{{scope.row.code}}</el-button>
@@ -198,10 +202,10 @@
               </el-table-column>
             </el-table-column>
           </el-table>
-        </template>
-        <template>
-          <el-table class="tables_ps" border :data="whNullResVOSdata">
-            <el-table-column label="未绑定货架">
+        </div>
+        <div class="tables_ps2">
+          <el-table border :data="whNullResVOSdata">
+            <el-table-column align="center" label="未绑定货架">
               <el-table-column align="center" label="货架名称">
                 <template slot-scope="scope">
                   <el-tag size="small">{{scope.row.name}}</el-tag>
@@ -214,13 +218,8 @@
               </el-table-column>
             </el-table-column>
           </el-table>
-        </template>
-
+        </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisibleSearch = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisibleSearch = false">确 定</el-button>
-      </span>
     </el-dialog>
   </div>
 </template>
@@ -566,6 +565,8 @@
           })
         } else {
           this.$network.warehouse.reservoir.getReservoirList({
+            pageNum: this.pageNum,
+            size: this.size,
             code: p2,
             name: p1,
             warehouseId: p3
@@ -573,6 +574,7 @@
             // console.log(res);
             if (res.code === 0) {
               this.ReservoirList = res.data.reservoirVOS
+              this.total = res.data.total
               this.$notify({
                 title: "成功",
                 message: "查询成功",
@@ -652,13 +654,19 @@
     .dialogVisibleSearchkuqu {
       display: flex;
 
-      .tables_ps {
-        margin-left: 10px;
+      div {
+        flex: 1;
       }
 
-      .tables_ps::before {
-        background-color: #fff;
+      .tables_ps {
+        margin-right: 5px;
       }
+
+      .tables_ps2 {
+        margin-left: 5px;
+      }
+
+
     }
 
     .el-select {

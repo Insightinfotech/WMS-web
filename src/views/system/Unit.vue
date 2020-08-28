@@ -6,7 +6,8 @@
         <!-- 添加字典按钮 -->
         <el-button type="primary" style="marginRight:35px" @click="addUserUnit">添加字典</el-button>
         <!-- 搜索框 -->
-        <el-input placeholder="请输入内容" v-model="inputunit" style="marginBottom:15px" class="input-with-select">
+        <el-input clearable @input="unitval" placeholder="请输入内容" v-model="inputunit" style="marginBottom:15px"
+          class="input-with-select">
           <el-select class="select_option" v-model="select" slot="prepend" placeholder="请选择分类">
             <el-option :label="item.name" v-for="item in unitdataclasscopy" :key="item.id" :value="item.id"></el-option>
           </el-select>
@@ -295,6 +296,11 @@
             this.unitdata = res.data.categoryVOS
             this.total = res.data.total
             this.typesdata = res.data.categoryTypeVOS
+            let data = JSON.parse(JSON.stringify(res.data.categoryTypeVOS))
+            data.unshift({
+              name: "全部"
+            })
+            this.unitdataclasscopy = data
           } else {
             this.$notify({
               title: "失败",
@@ -414,6 +420,11 @@
           }
         })
       },
+      unitval(val) {
+        if (val == "") {
+          this.getUnitlist()
+        }
+      },
       // 搜索
       unitSearch() {
         this.$network.home.unit.unitSearchName({
@@ -512,11 +523,6 @@
           if (res.code === 0) {
             this.unitdataclass = res.data.categoryTypeVOS
             this.totals = res.data.total
-            let data = JSON.parse(JSON.stringify(res.data.categoryTypeVOS))
-            data.unshift({
-              name: "全部"
-            })
-            this.unitdataclasscopy = data
           } else {
             this.$notify({
               title: "失败",

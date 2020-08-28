@@ -1,8 +1,9 @@
 <template>
   <div class="asids">
     <div class="asids_tog" @click="getfoldUp">|||</div>
-    <el-menu unique-opened class="el-menu-vertical-demo" background-color="#03132c" text-color="#fff" active-text-color="#FEBD69"
-      :default-active="activeroute" :collapse="collapse" router :collapse-transition="false">
+    <el-menu unique-opened class="el-menu-vertical-demo" background-color="#03132c" text-color="#fff"
+      active-text-color="#FEBD69" :default-active="activeroute" :collapse="collapse" router
+      :collapse-transition="false">
       <template v-for="(date,index) in menuDate">
         <el-submenu :key="index" :index="date.submenu.index" :style="collapse? 'width:64px':'width:200px'">
           <template slot="title">
@@ -85,10 +86,76 @@
                 }
               ]
             }]
+          },
+          {
+            submenu: {
+              index: "basic",
+              titleIcon: "el-icon-suitcase",
+              text: "基础信息管理"
+            },
+            menuItemGroups: [{
+              menuItems: [{
+                  index: "/home/basic/material",
+                  route: {
+                    path: "/home/basic/material"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "物料管理"
+                },
+                {
+                  index: "/home/basic/product",
+                  route: {
+                    path: "/home/basic/product"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "产品管理"
+                },
+                {
+                  index: "/home/basic/partner",
+                  route: {
+                    path: "/home/basic/partner"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "合作方管理"
+                }
+              ]
+            }]
+          },
+          {
+            submenu: {
+              index: "putwarehouse",
+              titleIcon: "el-icon-discount",
+              text: "出入库管理"
+            },
+            menuItemGroups: [{
+              menuItems: [{
+                  index: "/home/putwarehouse/inventory",
+                  route: {
+                    path: "/home/putwarehouse/inventory"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "库存管理"
+                },
+                {
+                  index: "/home/putwarehouse/orderlist",
+                  route: {
+                    path: "/home/putwarehouse/orderlist"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "订单管理"
+                },
+                {
+                  index: "/home/putwarehouse/procurement",
+                  route: {
+                    path: "/home/putwarehouse/procurement"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "采购管理"
+                }
+              ]
+            }]
           }
-
         ],
-
       }
     },
     methods: {

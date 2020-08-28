@@ -19,28 +19,39 @@
               <template slot-scope="scope">
                 <div class="rolesexpand">
                   <div>
-                    <el-tag size="mini" type="info">库区编码</el-tag> {{scope.row.code}}
+                    <el-tag size="mini" type="info">货架编码</el-tag> {{scope.row.code}}
                   </div>
                   <div>
-                    <el-tag size="mini" type="info">库区ID</el-tag> {{scope.row.id}}
+                    <el-tag size="mini" type="info">货架ID</el-tag> {{scope.row.id}}
                   </div>
                   <div>
-                    <el-tag size="mini" type="info">库区名称</el-tag> {{scope.row.name}}
+                    <el-tag size="mini" type="info">货架名称</el-tag> {{scope.row.name}}
                   </div>
                   <div>
-                    <el-tag size="mini" type="info">所属仓库</el-tag> {{scope.row.warehouse.name}}
+                    <el-tag size="mini" type="info">所属仓库</el-tag>
+                    <span v-if="scope.row.warehouse == null"></span>
+                    <span v-else>{{scope.row.warehouse.name}}</span>
                   </div>
                   <div>
-                    <el-tag size="mini" type="info">所属仓库ID</el-tag> {{scope.row.warehouse.id}}
+                    <el-tag size="mini" type="info">所属仓库ID</el-tag>
+                    <span v-if="scope.row.warehouse == null"></span>
+                    <span v-else>{{scope.row.warehouse.id}}</span>
                   </div>
                   <div>
-                    <el-tag size="mini" type="info">所属库区</el-tag> {{scope.row.reservoir.name}}
+                    <el-tag size="mini" type="info">所属库区</el-tag>
+                    <span v-if="scope.row.reservoir == null"></span>
+                    <span v-else>{{scope.row.reservoir.name}}</span>
                   </div>
                   <div>
-                    <el-tag size="mini" type="info">所属库区ID</el-tag> {{scope.row.reservoir.id}}
+                    <el-tag size="mini" type="info">所属库区ID</el-tag>
+                    <span v-if="scope.row.reservoir == null"></span>
+                    <span v-else>{{scope.row.reservoir.id}}</span>
                   </div>
                   <div>
                     <el-tag size="mini" type="info">备注</el-tag> {{scope.row.remark}}
+                  </div>
+                  <div>
+                    <el-tag size="mini" type="info">货架层数</el-tag> {{scope.row.layer}}
                   </div>
                   <div>
                     <el-tag size="mini" type="info">创建时间</el-tag> {{scope.row.createTime | dateTimeFormat}}
@@ -334,6 +345,8 @@
           })
         } else {
           this.$network.warehouse.Parcel.parcelList({
+            pageNum: this.pageNum,
+            size: this.size,
             code: p2,
             name: p1,
             warehouseId: p3,
@@ -342,6 +355,7 @@
             // console.log(res);
             if (res.code === 0) {
               this.parcelListData = res.data.shelvesVOS
+              this.total = res.data.total
               this.$notify({
                 title: "成功",
                 message: "查询成功",
@@ -405,9 +419,11 @@
               name: this.addreservoirEdit.name,
               layer: this.addreservoirEdit.layer,
               remark: this.addreservoirEdit.remark,
-              warehouseId: this.addreservoirEdit.warehouseId.length <= 0 ? '' : this.addreservoirEdit.warehouseId[
-                0],
-              reservoirId: this.addreservoirEdit.warehouseId.length <= 0 ? '' : this.addreservoirEdit.warehouseId[1]
+              warehouseId: this.addreservoirEdit.warehouseId.length <= 0 ? '' : this.addreservoirEdit
+                .warehouseId[
+                  0],
+              reservoirId: this.addreservoirEdit.warehouseId.length <= 0 ? '' : this.addreservoirEdit
+                .warehouseId[1]
             }).then(res => {
               // console.log(res);
               if (res.code === 0) {

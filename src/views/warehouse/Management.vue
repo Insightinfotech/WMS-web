@@ -183,10 +183,9 @@
     <!-- 查看库区弹框 -->
     <el-dialog title="查看库区" :visible.sync="dialogVisibleSearch" @close="kuquClose" width="70%">
       <div class="dialogVisibleSearchkuqu">
-        <template>
-          <el-table class="tables_ps" :data="reservoirVOSdata">
-
-            <el-table-column label="已绑定库区">
+        <div class="tables_ps">
+          <el-table :data="reservoirVOSdata">
+            <el-table-column align="center" label="已绑定库区">
               <el-table-column align="center" label="库区编码">
                 <template slot-scope="scope">
                   <el-button size="mini" type="text">{{scope.row.code}}</el-button>
@@ -209,10 +208,10 @@
               </el-table-column>
             </el-table-column>
           </el-table>
-        </template>
-        <template>
-          <el-table class="tables_ps" border :data="whNullResVOSdata">
-            <el-table-column label="未绑定库区">
+        </div>
+        <div class="tables_ps2">
+          <el-table border :data="whNullResVOSdata">
+            <el-table-column align="center" label="未绑定库区">
               <el-table-column align="center" label="库区名称">
                 <template slot-scope="scope">
                   <el-tag size="small">{{scope.row.name}}</el-tag>
@@ -225,13 +224,9 @@
               </el-table-column>
             </el-table-column>
           </el-table>
-        </template>
-
+        </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisibleSearch = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisibleSearch = false">确 定</el-button>
-      </span>
+
     </el-dialog>
   </div>
 </template>
@@ -290,7 +285,7 @@
               trigger: 'blur'
             },
             {
-              pattern: /^(13[0-9]|15[0|1|3|6|7|8|9]|18[8|9])\d{8}$/,
+              pattern: /1[34578][012356789]\d{8}/,
               message: '请輸入正确的格式',
               trigger: 'blur'
             }
@@ -650,11 +645,15 @@
           })
         } else {
           this.$network.warehouse.management.getManagementList({
+            pageNum: this.pageNum,
+            size: this.size,
             code: p2,
             name: p1
           }).then(res => {
             if (res.code === 0) {
               this.managementList = res.data.warehouseVOS
+              this.total = res.data.total
+
               this.$notify({
                 title: "成功",
                 message: "查询成功",
@@ -689,13 +688,19 @@
     .dialogVisibleSearchkuqu {
       display: flex;
 
-      .tables_ps {
-        margin-left: 10px;
+      div {
+        flex: 1;
       }
 
-      .tables_ps::before {
-        background-color: #fff;
+      .tables_ps {
+        margin-right: 5px;
       }
+
+      .tables_ps2 {
+        margin-left: 5px;
+      }
+
+
     }
 
     .input-with-select {
