@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import Print from "vue-print-nb"
 import "normalize.css"
 import "./assets/css/global.scss"
 import "./plugins/element.js"
@@ -9,6 +10,7 @@ import VueParticles from 'vue-particles'
 import networkPlugin from "plugins/NetworkPlugin"
 Vue.use(networkPlugin)
 Vue.use(VueParticles)
+Vue.use(Print)
 // 全局时间过滤器
 Vue.filter('dateTimeFormat', (val) => {
   const date = new Date(val)

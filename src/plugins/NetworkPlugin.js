@@ -72,7 +72,9 @@ import {
   productDelete,
   productId
 } from "api/helpers/basic/product"
-// import {} from "ap1/helpers/putwarehouse/inventory"
+import {
+  inventoryList
+} from "api/helpers/putwarehouse/inventory"
 import {
   procurementList,
   procurementAdd,
@@ -82,9 +84,36 @@ import {
   procurementKuQuList,
   procurementSkuAdd,
   procurementDeleteSku,
-  procurementDeleteSkuEditId
+  procurementDeleteSkuEditId,
+  procurementSkuAddUpdate,
+  procurementUpdateStatus
 } from "api/helpers/putwarehouse/procurement"
-
+import {
+  gostorageList,
+  gostorageAddList,
+  gostorageUpdateStatus,
+  gostorageDelete,
+  gostorageEditId,
+  gostorageAddListEdit,
+  gostoragekinId,
+  stockInDetailAdd,
+  gostorageDetailDelete,
+  gostorageDetailEditId,
+  stockInDetailAddEdit
+} from "api/helpers/putwarehouse/gostorage"
+import {
+  OutboundList,
+  OutboundAdd,
+  OutboundListDelete,
+  OutboundListEdit,
+  OutboundAddDeit,
+  stockOutDetailList,
+  stockOutDetailCreate,
+  stockOutDetailUpdate,
+  stockOutDetailListId,
+  stockOutDetailListIdDelete,
+  OutboundupdateStatus
+} from "api/helpers/putwarehouse/outbound"
 class NetworkPlugin {
   install(Vue) {
     Vue.prototype.$network = {
@@ -168,7 +197,7 @@ class NetworkPlugin {
       },
       putwarehouse: {
         inventory: {
-
+          inventoryList
         },
         procurement: {
           procurementList,
@@ -179,7 +208,35 @@ class NetworkPlugin {
           procurementKuQuList,
           procurementSkuAdd,
           procurementDeleteSku,
-          procurementDeleteSkuEditId
+          procurementDeleteSkuEditId,
+          procurementSkuAddUpdate,
+          procurementUpdateStatus
+        },
+        gostorage: {
+          gostorageList,
+          gostorageAddList,
+          gostorageUpdateStatus,
+          gostorageDelete,
+          gostorageEditId,
+          gostorageAddListEdit,
+          gostoragekinId,
+          stockInDetailAdd,
+          gostorageDetailDelete,
+          gostorageDetailEditId,
+          stockInDetailAddEdit
+        },
+        outbound: {
+          OutboundList,
+          OutboundAdd,
+          OutboundListDelete,
+          OutboundListEdit,
+          OutboundAddDeit,
+          stockOutDetailList,
+          stockOutDetailCreate,
+          stockOutDetailUpdate,
+          stockOutDetailListId,
+          stockOutDetailListIdDelete,
+          OutboundupdateStatus
         }
       }
     }

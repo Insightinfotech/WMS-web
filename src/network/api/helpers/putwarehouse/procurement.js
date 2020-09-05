@@ -92,7 +92,8 @@ export function procurementSkuAdd({
   skuId,
   companyId,
   price,
-  estimatedQuantity
+  estimatedQuantity,
+  categoryId
 }) {
   return new Promise((resolve, reject) => {
     Procurement.procurementSkuAdd({
@@ -100,7 +101,8 @@ export function procurementSkuAdd({
       skuId,
       companyId,
       price,
-      estimatedQuantity
+      estimatedQuantity,
+      categoryId
     }).then(res => {
       resolve(res)
     }).catch(err => {
@@ -124,6 +126,48 @@ export function procurementDeleteSkuEditId(id) {
     Procurement.procurementDeleteSkuEditId(
       id
     ).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function procurementSkuAddUpdate({
+  id,
+  purchaseId,
+  skuId,
+  companyId,
+  price,
+  estimatedQuantity,
+  categoryId
+}) {
+  return new Promise((resolve, reject) => {
+    Procurement.procurementSkuAddUpdate({
+      id,
+      purchaseId,
+      skuId,
+      companyId,
+      price,
+      estimatedQuantity,
+      categoryId
+    }).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function procurementUpdateStatus({
+  id,
+  status,
+  overruledRemark
+}) {
+  return new Promise((resolve, reject) => {
+    Procurement.procurementUpdateStatus({
+      id,
+      status,
+      overruledRemark
+    }).then(res => {
       resolve(res)
     }).catch(err => {
       reject(err)

@@ -55,6 +55,14 @@ const routes = [{
       {
         path: "/home/putwarehouse/procurement",
         component: () => import("../views/putwarehouse/Procurement")
+      },
+      {
+        path: "/home/putwarehouse/gostorage",
+        component: () => import("../views/putwarehouse/Gostorage")
+      },
+      {
+        path: "/home/putwarehouse/outbound",
+        component: () => import("../views/putwarehouse/Outbound")
       }
     ]
   },

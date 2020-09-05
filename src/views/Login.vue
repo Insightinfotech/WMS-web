@@ -42,7 +42,7 @@
               min: 2,
               max: 16,
               message: '长度在 2 到 16 个字符',
-              trigger: 'blur'
+              trigger: ['blur', 'change']
             }
           ],
           password: [{
@@ -54,7 +54,7 @@
               min: 6,
               max: 18,
               message: '长度在 6 到 18 个字符',
-              trigger: 'blur'
+              trigger: ['blur', 'change']
             }
           ],
         }

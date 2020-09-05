@@ -85,7 +85,8 @@ export default class Procurement {
     skuId,
     companyId,
     price,
-    estimatedQuantity
+    estimatedQuantity,
+    categoryId
   }) {
     return request({
       url: "/purchaseDetail/create",
@@ -95,7 +96,8 @@ export default class Procurement {
         skuId,
         companyId,
         price,
-        estimatedQuantity
+        estimatedQuantity,
+        categoryId
       }
     }, {
       token: store.getters.userToken
@@ -115,6 +117,49 @@ export default class Procurement {
       method: "GET"
     }, {
       token: store.getters.userToken
+    })
+  }
+  static procurementSkuAddUpdate({
+    id,
+    purchaseId,
+    skuId,
+    companyId,
+    price,
+    estimatedQuantity,
+    categoryId
+  }) {
+    return request({
+      url: "/purchaseDetail/update",
+      method: "PUT",
+      data: {
+        id,
+        purchaseId,
+        skuId,
+        companyId,
+        price,
+        estimatedQuantity,
+        categoryId
+      }
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static procurementUpdateStatus({
+    id,
+    status,
+    overruledRemark
+  }) {
+    return request({
+      url: "/purchase/updateStatus",
+      method: "PUT",
+      params: {
+        id,
+        status,
+        overruledRemark
+      }
+    }, {
+      token: store.getters.userToken,
+      "Content-Type": "x-www-form-urlencoded"
     })
   }
 }

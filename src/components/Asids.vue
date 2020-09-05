@@ -151,6 +151,22 @@
                   },
                   itemsIcon: "el-icon-menu",
                   text: "采购管理"
+                },
+                {
+                  index: "/home/putwarehouse/gostorage",
+                  route: {
+                    path: "/home/putwarehouse/gostorage"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "入库管理"
+                },
+                {
+                  index: "/home/putwarehouse/outbound",
+                  route: {
+                    path: "/home/putwarehouse/outbound"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "出库单管理"
                 }
               ]
             }]

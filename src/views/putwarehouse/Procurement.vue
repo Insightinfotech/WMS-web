@@ -24,12 +24,12 @@
                 <el-button size="mini" type="text">{{scope.row.code}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="经办人">
+            <el-table-column align="center" label="经办人" width="120">
               <template slot-scope="scope">
                 <el-button size="mini" type="text">{{scope.row.gestore}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="采购单明细">
+            <el-table-column align="center" label="采购单明细" width="120">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" content="查看和编辑明细" placement="left">
                   <el-button @click="procurementRuku(scope.row.id)" type="primary" size="mini" icon="el-icon-s-grid">
@@ -37,17 +37,17 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="工具人">
+            <el-table-column align="center" label="工具人" width="120">
               <template slot-scope="scope">
                 <el-tag size="small" type="danger">{{scope.row.lastOperationUser}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="入库状态">
+            <el-table-column align="center" label="入库状态" width="120">
               <template slot-scope="scope">
                 <el-tag size="small" type="success" v-if="scope.row.status == 1">初始录入</el-tag>
                 <el-tag size="small" type="warning" v-else-if="scope.row.status == 2">审核中</el-tag>
                 <el-tag size="small" type="danger" v-else-if="scope.row.status == 3">审核驳回</el-tag>
-                <el-tag size="small" type="info" v-else-if="scope.row.status == 4">入库中</el-tag>
+                <el-tag size="small" type="info" v-else-if="scope.row.status == 4">采购中</el-tag>
                 <el-tag size="small" v-else>完成</el-tag>
               </template>
             </el-table-column>
@@ -62,9 +62,37 @@
                 <el-tag size="small" type="info" v-else>{{scope.row.updateTime |dateTimeFormat}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="操作">
+            <el-table-column align="center" label="操作" width="250">
               <template slot-scope="scope">
-                <!-- {{scope.row.status}} -->
+                <!-- {{scope.row.count}} -->
+                <el-popconfirm confirmButtonText='好的' v-if="scope.row.status==4" cancelButtonText='不用了'
+                  icon="el-icon-info" iconColor="#e3c048" title="确定此采购订单入库?"
+                  @onConfirm="procurementShenHeRuku(scope.row.id)">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="入库" placement="left">
+                    <el-button type="text" icon="el-icon-s-check" style="marginRight:5px" size="medium">
+                    </el-button>
+                  </el-tooltip>
+                </el-popconfirm>
+                <el-popconfirm confirmButtonText='好的' cancelButtonText='不用了' icon="el-icon-info" iconColor="#e3c048"
+                  title="确定此采购订单通过审核吗?" v-if="scope.row.status==2" @onConfirm="procurementShenHeTong(scope.row.id)">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="审核通过" placement="left">
+                    <el-button type="text" icon="el-icon-success" style="marginRight:5px" size="medium">
+                    </el-button>
+                  </el-tooltip>
+                </el-popconfirm>
+                <el-tooltip v-if="scope.row.status==2" class="item" effect="dark" content="审核驳回" placement="left">
+                  <el-button type="text" icon="el-icon-error" size="medium" @click="procurementBohui(scope.row.id)"
+                    style="marginRight:5px">
+                  </el-button>
+                </el-tooltip>
+                <el-popconfirm confirmButtonText='好的' cancelButtonText='不用了' icon="el-icon-info" iconColor="#e3c048"
+                  title="确定提交采购订单进行审核吗?" v-if="scope.row.status == 3 || scope.row.count!==null && scope.row.status == 1"
+                  @onConfirm="procurementShenHe(scope.row.id)">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="采购单审核" placement="left">
+                    <el-button type="info" style="marginRight:5px" icon="el-icon-s-order" size="mini">
+                    </el-button>
+                  </el-tooltip>
+                </el-popconfirm>
                 <el-tooltip class="item" effect="dark" content="编辑" placement="left">
                   <el-button type="primary" icon="el-icon-edit" size="mini" @click="procurementEdit(scope.row.id)">
                   </el-button>
@@ -229,6 +257,58 @@
         <el-button type="primary" @click="procurementRukuSku('ruleFormSku')">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 编辑采购弹框 -->
+    <el-dialog title="添加采购产品" :visible.sync="dialogVisibleAddkuquEdit" width="25%"
+      @close="dialogVisibleAddkuquCloseEdit">
+      <el-form :model="purchaseDetailVOSku" ref="ruleFormSkuEdit" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="产品" prop="selectedSku" :rules="[{
+            required: true,
+            message: '请选择产品',
+            trigger: ['blur','change']
+          }]">
+          <el-cascader @change="cascaderSku" v-model="purchaseDetailVOSku.selectedSku" placeholder="请选择产品"
+            :options="companyVOS" :props="props">
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="价格" prop="price">
+          <el-input disabled v-model="arrSku.price"></el-input>
+        </el-form-item>
+        <el-form-item label="字典单位" prop="price">
+          <el-input disabled v-model="arrSku.name"></el-input>
+        </el-form-item>
+        <el-form-item label="预计数量" prop="estimatedQuantity" :rules="[{
+              required: true,
+              message: '请输入数量',
+              trigger: ['blur','change']
+            },
+            {
+              pattern: /^[1-9]*[1-9][0-9]*$/,
+              message: '请輸入正确的数量',
+              trigger: ['blur','change']
+            }]">
+          <el-input v-model="purchaseDetailVOSku.estimatedQuantity"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleAddkuquEdit = false">取 消</el-button>
+        <el-button type="primary" @click="procurementRukuSkuEdit('ruleFormSkuEdit')">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 提交审核驳回弹框 -->
+    <el-dialog title="请填写驳回理由" :visible.sync="dialogVisibleBohui" width="20%" @close="dialogVisibleBohuiq">
+      <el-form :model="ruleFormBohui" ref="ruleFormBohui" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="驳回理由" prop="overruledRemark" :rules="[{
+            required: true,
+            message: '请输入内容',
+            trigger: ['blur','change']
+          }]">
+          <el-input type="textarea" v-model="ruleFormBohui.overruledRemark"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="Bohuiq('ruleFormBohui')">提交驳回理由</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -251,6 +331,8 @@
         dialogVisibleEdit: false,
         dialogVisibleRuku: false,
         dialogVisibleAddkuqu: false,
+        dialogVisibleAddkuquEdit: false,
+        dialogVisibleBohui: false,
         ruleForm: {
           code: "",
           gestore: "",
@@ -275,7 +357,12 @@
           value: "id"
         },
         rukuXiangQingId: "",
-        arrSku: {}
+        arrSku: {},
+        purchaseDetailVOSku: {},
+        ruleFormBohui: {
+          overruledRemark: ""
+        },
+        bohuiID: ""
       }
     },
     methods: {
@@ -507,7 +594,7 @@
         this.rukuXiangQingId = id
         this.dialogVisibleRuku = true
         this.$network.putwarehouse.procurement.procurementEditId(id).then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code === 0) {
             this.ruleFormEditRuku = res.data.purchaseVO
             this.statusSku = res.data.purchaseVO.status
@@ -573,6 +660,7 @@
               skuId: this.ruleFormSku.companyId[1],
               companyId: this.ruleFormSku.companyId[0],
               price: this.arrSku.price,
+              categoryId: this.arrSku.id,
               estimatedQuantity: this.ruleFormSku.estimatedQuantity
             }).then(res => {
               // console.log(res);
@@ -585,6 +673,7 @@
                 this.dialogVisibleAddkuqu = false
                 this.$refs[ruleFormSku].resetFields();
                 this.procurementKuQuLists(this.rukuXiangQingId)
+                this.getProcurementList()
               } else {
                 this.$notify({
                   title: "失败",
@@ -617,8 +706,10 @@
           if (v.id == p1) {
             v.skuVOS.filter(v1 => {
               if (v1.id == p2) {
+                arr.id = v1.categoryVO.id
                 arr.name = v1.categoryVO.name
                 arr.price = v1.skuInfos[0].price
+                // console.log(v1);
               }
             })
           }
@@ -626,19 +717,42 @@
         })
         this.arrSku = arr
       },
-      // 采购单明细编辑
+      dialogVisibleAddkuquCloseEdit() {
+        this.arrSku = {}
+      },
+      // 采购单明细编辑回显
       procurementSkuEdit(id) {
-       this.$network.putwarehouse.procurement.procurementDeleteSkuEditId(id).then(res => {
-          console.log(res);
-          // if (res.code === 0) {
-          //   this.ruleFormEdit = res.data.purchaseVO
-          // } else {
-          //   this.$notify({
-          //     title: "失败",
-          //     message: res.msg,
-          //     type: "error"
-          //   })
-          // }
+        this.dialogVisibleAddkuquEdit = true
+        this.$network.putwarehouse.procurement.procurementDeleteSkuEditId(id).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            let p1 = res.data.purchaseDetailVO.selectedSku[0]
+            let p2 = res.data.purchaseDetailVO.selectedSku[1]
+            let datas = JSON.parse(JSON.stringify(this.companyVOS))
+            var arr = {}
+            datas.filter(v => {
+              if (v.id == p1) {
+                v.skuVOS.filter(v1 => {
+                  if (v1.id == p2) {
+                    arr.id = v1.categoryVO.id
+                    arr.name = v1.categoryVO.name
+                    arr.price = v1.skuInfos[0].price
+                  }
+                })
+              }
+
+            })
+            this.arrSku = arr
+            // console.log(datas);
+            this.purchaseDetailVOSku = res.data.purchaseDetailVO
+
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
         }).catch(err => {
           this.$notify({
             title: "失败",
@@ -646,6 +760,52 @@
             type: "error"
           })
         })
+      },
+      //采购明细编辑添加 
+      procurementRukuSkuEdit(ruleFormSkuEdit) {
+        this.$refs[ruleFormSkuEdit].validate((valid) => {
+          if (valid) {
+            this.$network.putwarehouse.procurement.procurementSkuAddUpdate({
+              id: this.purchaseDetailVOSku.id,
+              purchaseId: this.rukuXiangQingId,
+              skuId: this.purchaseDetailVOSku.selectedSku[1],
+              companyId: this.purchaseDetailVOSku.selectedSku[0],
+              price: this.arrSku.price,
+              categoryId: this.arrSku.id,
+              estimatedQuantity: this.purchaseDetailVOSku.estimatedQuantity
+            }).then(res => {
+              // console.log(res);
+              if (res.code === 0) {
+                this.$notify({
+                  title: "成功",
+                  message: "编辑采购产品成功",
+                  type: "success"
+                })
+                this.dialogVisibleAddkuquEdit = false
+                this.$refs[ruleFormSkuEdit].resetFields();
+                this.procurementKuQuLists(this.rukuXiangQingId)
+              } else {
+                this.$notify({
+                  title: "失败",
+                  message: res.msg,
+                  type: "error"
+                })
+              }
+            }).catch(err => {
+              this.$notify({
+                title: "失败",
+                message: err,
+                type: "error"
+              })
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: "请填写完整信息",
+              showClose: true
+            })
+          }
+        });
       },
       // 采购单明细删除
       procurementSkuDelete(id) {
@@ -670,6 +830,145 @@
             message: err,
             type: "error"
           })
+        })
+      },
+      // 采购单审核
+      procurementShenHe(id) {
+        // console.log(id);
+        this.$network.putwarehouse.procurement.procurementUpdateStatus({
+          id: id,
+          status: 2,
+          overruledRemark: ""
+        }).then(res => {
+          console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "提交成功",
+              type: "success"
+            })
+            this.getProcurementList()
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 通过审核
+      procurementShenHeTong(id) {
+        // console.log(id);
+        this.$network.putwarehouse.procurement.procurementUpdateStatus({
+          id: id,
+          status: 4,
+          overruledRemark: ""
+        }).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "通过审核成功",
+              type: "success"
+            })
+            this.getProcurementList()
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 入库
+      procurementShenHeRuku(id) {
+        this.$network.putwarehouse.procurement.procurementUpdateStatus({
+          id: id,
+          status: 5,
+          overruledRemark: ""
+        }).then(res => {
+          console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "入库成功",
+              type: "success"
+            })
+            this.getProcurementList()
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      dialogVisibleBohuiq() {
+        this.$refs["ruleFormBohui"].resetFields();
+        this.bohuiID = ""
+      },
+      // 订单驳回理由
+      procurementBohui(id) {
+        this.bohuiID = id
+        this.dialogVisibleBohui = true
+      },
+      Bohuiq(ruleFormBohui) {
+        this.$refs[ruleFormBohui].validate((valid) => {
+          if (valid) {
+            this.$network.putwarehouse.procurement.procurementUpdateStatus({
+              id: this.bohuiID,
+              status: 3,
+              overruledRemark: this.ruleFormBohui.overruledRemark
+            }).then(res => {
+              // console.log(res);
+              if (res.code === 0) {
+                this.$notify({
+                  title: "驳回成功",
+                  type: "success"
+                })
+
+                this.getProcurementList()
+                this.dialogVisibleBohui = false
+
+              } else {
+                this.$notify({
+                  title: "失败",
+                  message: res.msg,
+                  type: "error"
+                })
+              }
+            }).catch(err => {
+              this.$notify({
+                title: "失败",
+                message: err,
+                type: "error"
+              })
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: "请填写完整信息",
+              showClose: true
+            })
+          }
         })
       }
     },
