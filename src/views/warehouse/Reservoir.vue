@@ -62,8 +62,14 @@
             <el-table-column type="index" align="center" label="#" width="50">
             </el-table-column>
             <el-table-column prop="code" align="center" label="库区编码">
+              <template slot-scope="scope">
+                <el-button size="small" type="text">{{scope.row.code}}</el-button>
+              </template>
             </el-table-column>
             <el-table-column prop="name" align="center" label="库区名称">
+              <template slot-scope="scope">
+                <el-button size="small" type="text">{{scope.row.name}}</el-button>
+              </template>
             </el-table-column>
             <el-table-column prop="lastOperationUser" align="center" label="工具人">
               <template slot-scope="scope">
@@ -71,15 +77,25 @@
               </template>
             </el-table-column>
             <el-table-column prop="warehouseVO.name" align="center" label="所属仓库">
+              <template slot-scope="scope">
+                <!-- {{scope.row.warehouseVO}} -->
+                <el-tag size="small" type="info" v-if="scope.row.warehouseVO == null || scope.row.warehouseVO == ''">
+                  暂无
+                </el-tag>
+                <el-tag v-else size="small">{{scope.row.warehouseVO.name}}</el-tag>
+              </template>
             </el-table-column>
             <el-table-column align="center" label="库区面积">
               <template slot-scope="scope">
-                <el-tag size="small" v-if="scope.row.acreage==null">暂无</el-tag>
-                <el-tag size="small" v-else-if="scope.row.acreage==''">暂无</el-tag>
-                <el-tag size="small" type="success" v-else>{{scope.row.acreage}}</el-tag>
+                <el-tag size="small" type="info" v-if="scope.row.acreage==null ||scope.row.acreage==''">暂无</el-tag>
+                <el-button size="small" type="text" v-else>{{scope.row.acreage}}</el-button>
               </template>
             </el-table-column>
             <el-table-column prop="category.name" align="center" label="字典单位">
+              <template slot-scope="scope">
+
+                <el-button size="small" type="text">{{scope.row.category.name}}</el-button>
+              </template>
             </el-table-column>
             <el-table-column align="center" label="创建时间" width="180">
               <template slot-scope="scope">
@@ -112,16 +128,17 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 添加库区 -->
-    <el-dialog title="添加仓库" @close="addreservoirClose" :visible.sync="dialogVisible" width="25%">
+    <el-dialog title="添加库区" @close="addreservoirClose" :visible.sync="dialogVisible" width="25%">
       <el-form :model="addreservoir" ref="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="仓库编号" prop="code">
-          <el-input v-model="addreservoir.code"></el-input>
+          <el-input v-model="addreservoir.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjia">点击生成</el-button>
         </el-form-item>
         <el-form-item label="仓库名称" prop="name">
-          <el-input v-model="addreservoir.name"></el-input>
+          <el-input v-model="addreservoir.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="仓库面积" prop="acreage">
-          <el-input v-model="addreservoir.acreage"></el-input>
+          <el-input v-model="addreservoir.acreage" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="所属仓库" prop="warehouseId">
           <el-select v-model="addreservoir.warehouseId" placeholder="请选择所属仓库">
@@ -147,13 +164,14 @@
       <el-form :model="addreservoirEdit" ref="ruleFormEdit" :rules="rulesEdit" label-width="100px"
         class="demo-ruleForm">
         <el-form-item label="仓库编号" prop="code">
-          <el-input v-model="addreservoirEdit.code"></el-input>
+          <el-input v-model="addreservoirEdit.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjiaEDit">点击生成</el-button>
         </el-form-item>
         <el-form-item label="仓库名称" prop="name">
-          <el-input v-model="addreservoirEdit.name"></el-input>
+          <el-input v-model="addreservoirEdit.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="仓库面积" prop="acreage">
-          <el-input v-model="addreservoirEdit.acreage"></el-input>
+          <el-input v-model="addreservoirEdit.acreage" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="所属仓库" prop="warehouseId">
           <el-select v-model="addreservoirEdit.warehouseVO" placeholder="请选择所属仓库">
@@ -224,6 +242,9 @@
   </div>
 </template>
 <script>
+  import {
+    randomNumberKQ
+  } from "@/plugins/unit.js"
   export default {
     data() {
       return {
@@ -324,6 +345,16 @@
           })
         })
       },
+      dianjia() {
+        let KQ = randomNumberKQ()
+        // console.log(JH);
+        this.addreservoir.code = KQ
+      },
+      dianjiaEDit() {
+        let KQ = randomNumberKQ()
+        // console.log(JH);
+        this.addreservoirEdit.code = KQ
+      },
       // 添加货架
       addkuqu(id) {
         let wid = this.huoId
@@ -414,11 +445,11 @@
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize
-        this.getReservoirList()
+        this.reservoirSearch()
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage
-        this.getReservoirList()
+        this.reservoirSearch()
       },
       // 添加库区
       reservoirAdd() {
@@ -557,44 +588,44 @@
         let p2 = this.input
         let p3 = this.select
         // console.log(p1, p2, p3);
-        if (p1 == "" && p2 == "" && p3 == "") {
-          this.$notify({
-            title: "失败",
-            message: "查询内容不可以为空",
-            type: "error"
-          })
-        } else {
-          this.$network.warehouse.reservoir.getReservoirList({
-            pageNum: this.pageNum,
-            size: this.size,
-            code: p2,
-            name: p1,
-            warehouseId: p3
-          }).then(res => {
-            // console.log(res);
-            if (res.code === 0) {
-              this.ReservoirList = res.data.reservoirVOS
-              this.total = res.data.total
-              this.$notify({
-                title: "成功",
-                message: "查询成功",
-                type: "success"
-              })
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.msg,
-                type: "error"
-              })
-            }
-          }).catch(err => {
+        // if (p1 == "" && p2 == "" && p3 == "") {
+        //   this.$notify({
+        //     title: "失败",
+        //     message: "查询内容不可以为空",
+        //     type: "error"
+        //   })
+        // } else {
+        this.$network.warehouse.reservoir.getReservoirList({
+          pageNum: this.pageNum,
+          size: this.size,
+          code: p2 == '' ? null : p2,
+          name: p1 == "" ? null : p1,
+          warehouseId: p3 == undefined ? null : p3
+        }).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.ReservoirList = res.data.reservoirVOS
+            this.total = res.data.total
+            this.$notify({
+              title: "成功",
+              message: "查询成功",
+              type: "success"
+            })
+          } else {
             this.$notify({
               title: "失败",
-              message: err,
+              message: res.msg,
               type: "error"
             })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
           })
-        }
+        })
+        // }
       },
       reservoirInput(val) {
         if (val == "") {

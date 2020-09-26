@@ -184,4 +184,33 @@ export default class Gostorage {
       token: store.getters.userToken
     })
   }
+  static gostorageListstockInLog({
+    pageNum,
+    size,
+    stockInCode,
+    purchaseCode,
+    stockInType,
+    sku,
+    gestore,
+    startTime,
+    endTime
+  }) {
+    return request({
+      url: "/stockIn/stockInLog",
+      method: "GET",
+      params: {
+        pageNum,
+        size,
+        stockInCode,
+        purchaseCode,
+        stockInType,
+        sku,
+        gestore,
+        startTime,
+        endTime
+      }
+    }, {
+      token: store.getters.userToken
+    })
+  }
 }

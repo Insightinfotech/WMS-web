@@ -238,32 +238,33 @@
     <el-dialog title="添加供应商" @close="addPartnerClose" :visible.sync="dialogVisible" width="25%">
       <el-form :model="addPartner" ref="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="供应商编号" prop="code">
-          <el-input v-model="addPartner.code"></el-input>
+          <el-input v-model="addPartner.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjia">点击生成</el-button>
         </el-form-item>
         <el-form-item label="供应商名称" prop="name">
-          <el-input v-model="addPartner.name"></el-input>
+          <el-input v-model="addPartner.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人" prop="contactName">
-          <el-input v-model="addPartner.contactName"></el-input>
+          <el-input v-model="addPartner.contactName" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人电话" prop="phone">
-          <el-input v-model="addPartner.phone"></el-input>
+          <el-input v-model="addPartner.phone" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="省份" prop="province">
-          <el-input v-model="addPartner.province"></el-input>
+          <el-input v-model="addPartner.province" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="城市" prop="city">
-          <el-input v-model="addPartner.city"></el-input>
+          <el-input v-model="addPartner.city" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="区" prop="district">
-          <el-input v-model="addPartner.district"></el-input>
+          <el-input v-model="addPartner.district" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="addressLine">
-          <el-input v-model="addPartner.addressLine"></el-input>
+          <el-input v-model="addPartner.addressLine" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email"
           :rules="[{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
-          <el-input v-model="addPartner.email"></el-input>
+          <el-input v-model="addPartner.email" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="addPartner.remark"></el-input>
@@ -278,32 +279,33 @@
     <el-dialog title="添加客户" @close="addPartnerCloses" :visible.sync="dialogVisibles" width="25%">
       <el-form :model="addPartners" ref="ruleForms" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="客户编号" prop="code">
-          <el-input v-model="addPartners.code"></el-input>
+          <el-input v-model="addPartners.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjiakh">点击生成</el-button>
         </el-form-item>
         <el-form-item label="客户名称" prop="name">
-          <el-input v-model="addPartners.name"></el-input>
+          <el-input v-model="addPartners.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人" prop="contactName">
-          <el-input v-model="addPartners.contactName"></el-input>
+          <el-input v-model="addPartners.contactName" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人电话" prop="phone">
-          <el-input v-model="addPartners.phone"></el-input>
+          <el-input v-model="addPartners.phone" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="省份" prop="province">
-          <el-input v-model="addPartners.province"></el-input>
+          <el-input v-model="addPartners.province" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="城市" prop="city">
-          <el-input v-model="addPartners.city"></el-input>
+          <el-input v-model="addPartners.city" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="区" prop="district">
-          <el-input v-model="addPartners.district"></el-input>
+          <el-input v-model="addPartners.district" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="addressLine">
-          <el-input v-model="addPartners.addressLine"></el-input>
+          <el-input v-model="addPartners.addressLine" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email"
           :rules="[{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
-          <el-input v-model="addPartners.email"></el-input>
+          <el-input v-model="addPartners.email" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="addPartner.remark"></el-input>
@@ -318,32 +320,33 @@
     <el-dialog title="编辑供应商" @close="addPartnerCloseEdit" :visible.sync="dialogVisibleEdit" width="25%">
       <el-form :model="addPartnerEdit" ref="ruleFormEdit" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="供应商编号" prop="code">
-          <el-input v-model="addPartnerEdit.code"></el-input>
+          <el-input v-model="addPartnerEdit.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjiaEDit">点击生成</el-button>
         </el-form-item>
         <el-form-item label="供应商名称" prop="name">
-          <el-input v-model="addPartnerEdit.name"></el-input>
+          <el-input v-model="addPartnerEdit.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人" prop="contactName">
-          <el-input v-model="addPartnerEdit.contactName"></el-input>
+          <el-input v-model="addPartnerEdit.contactName" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人电话" prop="phone">
-          <el-input v-model="addPartnerEdit.phone"></el-input>
+          <el-input v-model="addPartnerEdit.phone" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="省份" prop="province">
-          <el-input v-model="addPartnerEdit.province"></el-input>
+          <el-input v-model="addPartnerEdit.province" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="城市" prop="city">
-          <el-input v-model="addPartnerEdit.city"></el-input>
+          <el-input v-model="addPartnerEdit.city" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="区" prop="district">
-          <el-input v-model="addPartnerEdit.district"></el-input>
+          <el-input v-model="addPartnerEdit.district" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="addressLine">
-          <el-input v-model="addPartnerEdit.addressLine"></el-input>
+          <el-input v-model="addPartnerEdit.addressLine" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email"
           :rules="[{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
-          <el-input v-model="addPartnerEdit.email"></el-input>
+          <el-input v-model="addPartnerEdit.email" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="addPartnerEdit.remark"></el-input>
@@ -358,32 +361,33 @@
     <el-dialog title="编辑客户" @close="addPartnerClosesEdit" :visible.sync="dialogVisiblesEdit" width="25%">
       <el-form :model="addPartnersEdit" ref="ruleFormsEdit" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="客户编号" prop="code">
-          <el-input v-model="addPartnersEdit.code"></el-input>
+          <el-input v-model="addPartnersEdit.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjiaEDitkh">点击生成</el-button>
         </el-form-item>
         <el-form-item label="客户名称" prop="name">
-          <el-input v-model="addPartnersEdit.name"></el-input>
+          <el-input v-model="addPartnersEdit.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人" prop="contactName">
-          <el-input v-model="addPartnersEdit.contactName"></el-input>
+          <el-input v-model="addPartnersEdit.contactName" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人电话" prop="phone">
-          <el-input v-model="addPartnersEdit.phone"></el-input>
+          <el-input v-model="addPartnersEdit.phone" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="省份" prop="province">
-          <el-input v-model="addPartnersEdit.province"></el-input>
+          <el-input v-model="addPartnersEdit.province" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="城市" prop="city">
-          <el-input v-model="addPartnersEdit.city"></el-input>
+          <el-input v-model="addPartnersEdit.city" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="区" prop="district">
-          <el-input v-model="addPartnersEdit.district"></el-input>
+          <el-input v-model="addPartnersEdit.district" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="addressLine">
-          <el-input v-model="addPartnersEdit.addressLine"></el-input>
+          <el-input v-model="addPartnersEdit.addressLine" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email"
           :rules="[{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
-          <el-input v-model="addPartnersEdit.email"></el-input>
+          <el-input v-model="addPartnersEdit.email" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="addPartnersEdit.remark"></el-input>
@@ -465,6 +469,10 @@
   </div>
 </template>
 <script>
+  import {
+    randomNumberGYS,
+    randomNumberKH
+  } from "@/plugins/unit.js"
   export default {
     data() {
       return {
@@ -535,7 +543,7 @@
               trigger: ['blur', 'change']
             },
             {
-              pattern: /1[34578][012356789]\d{8}/,
+              pattern: /^1[3456789]\d{9}$/,
               message: '请輸入正确的格式',
               trigger: ['blur', 'change']
             }
@@ -549,6 +557,26 @@
       }
     },
     methods: {
+      dianjia() {
+        let GYS = randomNumberGYS()
+        // console.log(JH);
+        this.addPartner.code = GYS
+      },
+      dianjiaEDit() {
+        let GYS = randomNumberGYS()
+        // console.log(JH);
+        this.addPartnerEdit.code = GYS
+      },
+      dianjiakh() {
+        let KH = randomNumberKH()
+        // console.log(JH);
+        this.addPartners.code = KH
+      },
+      dianjiaEDitkh() {
+        let KH = randomNumberKH()
+        // console.log(JH);
+        this.addPartnersEdit.code = KH
+      },
       // 供应商请求列表
       getpartnerList() {
         this.$network.basic.partner.partnerList({
@@ -605,19 +633,19 @@
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize
-        this.getpartnerList()
+        this.partnerSearch()
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage
-        this.getpartnerList()
+        this.partnerSearch()
       },
       handleSizeChanges(newsize) {
         this.sizes = newsize
-        this.getpartnerListuser()
+        this.partnerSearchs()
       },
       handleCurrentChanges(newpage) {
         this.pageNums = newpage
-        this.getpartnerListuser()
+        this.partnerSearchs()
       },
       partnerInput(vla) {
         if (vla === "") {
@@ -634,44 +662,44 @@
         let p1 = this.input3
         let p2 = this.input
         // console.log(p1, p2);
-        if (p1 == "" && p2 == "") {
-          this.$notify({
-            title: "失败",
-            message: "查询内容不可以为空",
-            type: "error"
-          })
-        } else {
-          this.$network.basic.partner.partnerList({
-            pageNum: this.pageNum,
-            size: this.size,
-            code: p2,
-            name: p1,
-            type: this.typeParther
-          }).then(res => {
-            console.log(res);
-            if (res.code === 0) {
-              this.supplierVOS = res.data.supplierVOS;
-              this.total = res.data.supplierTotal
-              this.$notify({
-                title: "成功",
-                message: "查询成功",
-                type: "success"
-              })
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.msg,
-                type: "error"
-              })
-            }
-          }).catch(err => {
+        // if (p1 == "" && p2 == "") {
+        //   this.$notify({
+        //     title: "失败",
+        //     message: "查询内容不可以为空",
+        //     type: "error"
+        //   })
+        // } else {
+        this.$network.basic.partner.partnerList({
+          pageNum: this.pageNum,
+          size: this.size,
+          code: p2 == '' ? null : p2,
+          name: p1 == "" ? null : p1,
+          type: this.typeParther
+        }).then(res => {
+          console.log(res);
+          if (res.code === 0) {
+            this.supplierVOS = res.data.supplierVOS;
+            this.total = res.data.supplierTotal
+            this.$notify({
+              title: "成功",
+              message: "查询成功",
+              type: "success"
+            })
+          } else {
             this.$notify({
               title: "失败",
-              message: err,
+              message: res.msg,
               type: "error"
             })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
           })
-        }
+        })
+        // }
 
       },
       // 搜索客户
@@ -679,44 +707,44 @@
         let p1 = this.input3s
         let p2 = this.inputs
         // console.log(p1, p2);
-        if (p1 == "" && p2 == "") {
-          this.$notify({
-            title: "失败",
-            message: "查询内容不可以为空",
-            type: "error"
-          })
-        } else {
-          this.$network.basic.partner.partnerList({
-            pageNum: this.pageNum,
-            size: this.size,
-            code: p2,
-            name: p1,
-            type: this.typeUser
-          }).then(res => {
-            // console.log(res);
-            if (res.code === 0) {
-              this.clientVOS = res.data.clientVOS;
-              this.totals = res.data.clientTotal
-              this.$notify({
-                title: "成功",
-                message: "查询成功",
-                type: "success"
-              })
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.msg,
-                type: "error"
-              })
-            }
-          }).catch(err => {
+        // if (p1 == "" && p2 == "") {
+        //   this.$notify({
+        //     title: "失败",
+        //     message: "查询内容不可以为空",
+        //     type: "error"
+        //   })
+        // } else {
+        this.$network.basic.partner.partnerList({
+          pageNum: this.pageNum,
+          size: this.size,
+          code: p2 == "" ? null : p2,
+          name: p1 == "" ? null : p1,
+          type: this.typeUser
+        }).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.clientVOS = res.data.clientVOS;
+            this.totals = res.data.clientTotal
+            this.$notify({
+              title: "成功",
+              message: "查询成功",
+              type: "success"
+            })
+          } else {
             this.$notify({
               title: "失败",
-              message: err,
+              message: res.msg,
               type: "error"
             })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
           })
-        }
+        })
+        // }
 
       },
       // 添加供应商

@@ -167,10 +167,69 @@
                   },
                   itemsIcon: "el-icon-menu",
                   text: "出库单管理"
+                },
+                {
+                  index: "/home/putwarehouse/picking",
+                  route: {
+                    path: "/home/putwarehouse/picking"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "拣货管理"
+                },
+                {
+                  index: "/home/putwarehouse/shifting",
+                  route: {
+                    path: "/home/putwarehouse/shifting"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "移库管理"
+                },
+                {
+                  index: "/home/putwarehouse/check",
+                  route: {
+                    path: "/home/putwarehouse/check"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "库存盘点管理"
+                },
+                {
+                  index: "/home/putwarehouse/records",
+                  route: {
+                    path: "/home/putwarehouse/records"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "入库记录"
+                },
+                {
+                  index: "/home/putwarehouse/delivery",
+                  route: {
+                    path: "/home/putwarehouse/delivery"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "出库记录"
                 }
               ]
             }]
-          }
+          },
+          {
+            submenu: {
+              index: "logit",
+              titleIcon: "el-icon-message-solid",
+              text: "系统管理"
+            },
+            menuItemGroups: [{
+              menuItems: [{
+                  index: "/home/logit/log",
+                  route: {
+                    path: "/home/logit/log"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "日志管理"
+                },
+
+              ]
+            }]
+          },
         ],
       }
     },

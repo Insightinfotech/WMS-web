@@ -99,7 +99,8 @@ import {
   stockInDetailAdd,
   gostorageDetailDelete,
   gostorageDetailEditId,
-  stockInDetailAddEdit
+  stockInDetailAddEdit,
+  gostorageListstockInLog
 } from "api/helpers/putwarehouse/gostorage"
 import {
   OutboundList,
@@ -112,8 +113,42 @@ import {
   stockOutDetailUpdate,
   stockOutDetailListId,
   stockOutDetailListIdDelete,
-  OutboundupdateStatus
+  OutboundupdateStatus,
+  OutboundstockOutLogList
 } from "api/helpers/putwarehouse/outbound"
+import {
+  PickingList,
+  PickingListCreate,
+  PickingupdateStatus,
+  PickingListDelete,
+  PickingselectStockOutCodes,
+  PickingselectStockOutCodesId
+} from "api/helpers/putwarehouse/picking"
+import {
+  shiftingList,
+  shiftingupdateStatus,
+  shiftingAdd,
+  shiftingDeleteId,
+  shiftingselectById,
+  shiftingAddUpdate,
+  shiftingselectUsableInventory,
+  shiftingselectByMove,
+  shiftingSkuAdd,
+  shiftingDeleteSkuId
+} from "api/helpers/putwarehouse/shifting"
+import {
+  checkList,
+  checkstockTakingAdd,
+  checkstockTakingAddDelete,
+  checkstockTakingAddEdit,
+  checkstockTakingAddId,
+  checkstockupdateStatus,
+  checkstockDescId,
+  checkstockDescsave
+} from "api/helpers/putwarehouse/check"
+import {
+  logList
+} from "api/helpers/log/log"
 class NetworkPlugin {
   install(Vue) {
     Vue.prototype.$network = {
@@ -223,7 +258,8 @@ class NetworkPlugin {
           stockInDetailAdd,
           gostorageDetailDelete,
           gostorageDetailEditId,
-          stockInDetailAddEdit
+          stockInDetailAddEdit,
+          gostorageListstockInLog
         },
         outbound: {
           OutboundList,
@@ -236,7 +272,43 @@ class NetworkPlugin {
           stockOutDetailUpdate,
           stockOutDetailListId,
           stockOutDetailListIdDelete,
-          OutboundupdateStatus
+          OutboundupdateStatus,
+          OutboundstockOutLogList
+        },
+        picking: {
+          PickingList,
+          PickingListCreate,
+          PickingupdateStatus,
+          PickingListDelete,
+          PickingselectStockOutCodes,
+          PickingselectStockOutCodesId
+        },
+        shifting: {
+          shiftingList,
+          shiftingupdateStatus,
+          shiftingAdd,
+          shiftingDeleteId,
+          shiftingselectById,
+          shiftingAddUpdate,
+          shiftingselectUsableInventory,
+          shiftingselectByMove,
+          shiftingSkuAdd,
+          shiftingDeleteSkuId
+        },
+        check: {
+          checkList,
+          checkstockTakingAdd,
+          checkstockTakingAddDelete,
+          checkstockTakingAddEdit,
+          checkstockTakingAddId,
+          checkstockupdateStatus,
+          checkstockDescId,
+          checkstockDescsave
+        }
+      },
+      log: {
+        log: {
+          logList
         }
       }
     }

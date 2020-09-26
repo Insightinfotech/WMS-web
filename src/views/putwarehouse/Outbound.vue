@@ -82,13 +82,27 @@
             </el-table-column>
             <el-table-column align="center" label="操作" width="230">
               <template slot-scope="scope">
-                <el-popconfirm confirmButtonText="好的" v-if="scope.row.status==4" cancelButtonText="不用了"
-                  icon="el-icon-info" iconColor="#e3c048" title="确定订单入库?"
-                  @onConfirm="procurementShenHeRuku(scope.row.id)">
-                  <el-tooltip slot="reference" class="item" effect="dark" content="入库" placement="left">
-                    <el-button type="text" icon="el-icon-s-check" style="marginRight:5px" size="medium"></el-button>
+                <el-popconfirm confirmButtonText="好的" v-if="scope.row.status==6" cancelButtonText="不用了"
+                  icon="el-icon-info" iconColor="#e3c048" title="确定订单可以出库?" @onConfirm="procurementchuku(scope.row.id)">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="出库" placement="left">
+                    <el-button type="text" icon="el-icon-truck" style="marginRight:5px" size="medium"></el-button>
                   </el-tooltip>
                 </el-popconfirm>
+                <!-- <el-popconfirm confirmButtonText="好的" v-if="scope.row.status==5" cancelButtonText="不用了"
+                  icon="el-icon-info" iconColor="#e3c048" title="确定订单拣货完成?"
+                  @onConfirm="procurementJianhuowanc(scope.row.id)">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="拣货完成" placement="left">
+                    <el-button type="text" icon="el-icon-loading" style="marginRight:5px" size="medium"></el-button>
+                  </el-tooltip>
+                </el-popconfirm> -->
+                <!-- <el-popconfirm confirmButtonText="好的" v-if="scope.row.status==4" cancelButtonText="不用了"
+                  icon="el-icon-info" iconColor="#e3c048" title="确定订单可以拣货?"
+                  @onConfirm="procurementJianhuo(scope.row.id)">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="拣货" placement="left">
+                    <el-button type="text" icon="el-icon-takeaway-box" style="marginRight:5px" size="medium">
+                    </el-button>
+                  </el-tooltip>
+                </el-popconfirm> -->
                 <el-popconfirm confirmButtonText="好的" cancelButtonText="不用了" icon="el-icon-info" iconColor="#e3c048"
                   title="确定此出库订单通过审核吗?" v-if="scope.row.status==2" @onConfirm="procurementShenHeTong(scope.row.id)">
                   <el-tooltip slot="reference" class="item" effect="dark" content="审核通过" placement="left">
@@ -113,7 +127,7 @@
                 <el-popconfirm confirmButtonText="好的" cancelButtonText="不用了" icon="el-icon-info" iconColor="red"
                   title="确定删除采购订单吗？" @onConfirm="procurementDelete(scope.row.id)">
                   <el-tooltip slot="reference" class="item" effect="dark" content="删除"
-                    v-if="scope.row.status == 5? false :true " placement="right">
+                    v-if="scope.row.status != 1? false :true" placement="right">
                     <el-button style="marginLeft:5px" icon="el-icon-delete" type="danger" size="mini"></el-button>
                   </el-tooltip>
                 </el-popconfirm>
@@ -145,8 +159,8 @@
             message: '请输入出库单编号',
             trigger: ['blur','change']
           }]">
-          <el-input v-model="stockOutVOs.code" clearable style="width:200px"></el-input>
-          <el-button style="marginLeft:10px" round size="small" @click="addrandomNumber" type="success">自动生成</el-button>
+          <el-input v-model="stockOutVOs.code" disabled clearable style="width:200px"></el-input>
+          <!-- <el-button style="marginLeft:10px" round size="small" @click="addrandomNumber" type="success">自动生成</el-button> -->
         </el-form-item>
 
         <el-form-item v-if="outboundId==''" label="出库类型" prop="type" :rules="[{
@@ -211,10 +225,10 @@
     <!-- 点击详情弹框 -->
     <el-dialog :title="'入库详情单'+ (stockInVOSCode == ''? '': stockInVOSCode)" :visible.sync="dialogVisibleDetail"
       width="75%" @close="dialogVisibleDetails">
-      <el-button :disabled="stockInVOStatus==2?true:stockInVOStatus==4?true:stockInVOStatus==5?true :false"
+      <el-button
+        :disabled="stockInVOStatus==2?true:stockInVOStatus==4?true:stockInVOStatus==5?true :stockInVOStatus==6?true:stockInVOStatus==7?true:false"
         type="primary" size="mini" style="marginBottom:10px" @click="stockInDetailAdd">添加</el-button>
       <!-- 打印 -->
-      <el-button v-print="printObj">打印</el-button>
       <el-card>
         <el-table id="printMe" :data="stockOutDetailVOS" border style="width: 100%">
           <el-table-column align="center" label="产品">
@@ -311,6 +325,21 @@
         <el-button type="primary" @click="detailAddSkus('ruleFormDetailAdd')">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 提交审核驳回弹框 -->
+    <el-dialog title="请填写驳回理由" :visible.sync="dialogVisibleBohui" width="20%" @close="dialogVisibleBohuiq">
+      <el-form :model="ruleFormBohui" ref="ruleFormBohui" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="驳回理由" prop="overruledRemark" :rules="[{
+            required: true,
+            message: '请输入内容',
+            trigger: ['blur','change']
+          }]">
+          <el-input type="textarea" v-model="ruleFormBohui.overruledRemark"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="Bohuiq('ruleFormBohui')">提交驳回理由</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -333,6 +362,7 @@
         dialogVisible: false,
         dialogVisibleDetail: false,
         dialogVisibleDetailAdd: false,
+        dialogVisibleBohui: false,
         outboundFormdata: {
           code: "",
           type: "",
@@ -364,6 +394,7 @@
           id: "printMe",
           popTitle: "good print",
         },
+        ruleFormBohui: {}
       };
     },
     methods: {
@@ -375,7 +406,7 @@
             size: this.size,
           })
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             if (res.code === 0) {
               this.stockOutVOSData = res.data.stockOutVOS;
               this.total = res.data.total;
@@ -424,11 +455,11 @@
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize;
-        this.getOutboundList();
+        this.GostorageSearch();
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage;
-        this.getOutboundList();
+        this.GostorageSearch();
       },
       //添加出库单
       outboundAdd() {
@@ -594,25 +625,25 @@
         }
       },
       GostorageSearch() {
-        if (
-          this.value1 === "" &&
-          this.value2 === "" &&
-          this.value3 === "" &&
-          this.input3 === ""
-        ) {
-          this.$notify({
-            title: "请输入或者选择数据进行搜索",
-            type: "error",
-          });
-        } else {
+        // if (
+        //   this.value1 === "" &&
+        //   this.value2 === "" &&
+        //   this.value3 === "" &&
+        //   this.input3 === ""
+        // ) {
+        //   this.$notify({
+        //     title: "请输入或者选择数据进行搜索",
+        //     type: "error",
+        //   });
+        // } else {
           this.$network.putwarehouse.outbound
             .OutboundList({
               pageNum: this.pageNum,
               size: this.size,
               code: this.input3,
-              type: this.value1 == -1 ? "" : this.value1,
-              status: this.value2 == 0 ? "" : this.value2,
-              companyId: this.value3 == undefined ? "" : this.value3,
+              type: this.value1 == -1 ? null : this.value1,
+              status: this.value2 == 0 ? null : this.value2,
+              companyId: this.value3 == undefined ? null : this.value3,
             })
             .then((res) => {
               // console.log(res);
@@ -634,7 +665,7 @@
                 type: "error",
               });
             });
-        }
+        // }
       },
       // 点击详情
       stockInDetail(id) {
@@ -807,7 +838,7 @@
         this.$network.putwarehouse.outbound
           .stockOutDetailListId(id)
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             if (res.code === 0) {
               this.ruleFormDetailAddEdit = res.data.stockOutDetailVO;
 
@@ -871,7 +902,206 @@
             });
           });
       },
+      // 入库单审核
+      procurementShenHe(id) {
+        // console.log(id);
+        this.$network.putwarehouse.outbound.OutboundupdateStatus({
+          id: id,
+          status: 2,
+          overruledRemark: ""
+        }).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "提交成功",
+              type: "success"
+            })
+            this.getOutboundList()
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 通过审核
+      procurementShenHeTong(id) {
+        // console.log(id);
+        this.$network.putwarehouse.outbound.OutboundupdateStatus({
+          id: id,
+          status: 4,
+          overruledRemark: ""
+        }).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "通过审核成功",
+              type: "success"
+            })
+            this.getOutboundList()
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 拣货中
+      procurementJianhuo(id) {
+        this.$network.putwarehouse.outbound.OutboundupdateStatus({
+          id: id,
+          status: 6,
+          overruledRemark: ""
+        }).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.$notify({
+              title: "拣货完成",
+              type: "success"
+            })
+            this.getOutboundList()
+          } else {
+            this.$notify({
+              title: "失败",
+              message: res.msg,
+              type: "error"
+            })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
+          })
+        })
+      },
+      // 拣货完成
+      // procurementJianhuowanc(id) {
+      //   this.$network.putwarehouse.outbound.OutboundupdateStatus({
+      //     id: id,
+      //     status: 7,
+      //     overruledRemark: ""
+      //   }).then(res => {
+      //     // console.log(res);
+      //     if (res.code === 0) {
+      //       this.$notify({
+      //         title: "拣货出库",
+      //         type: "success"
+      //       })
+      //       this.getOutboundList()
+      //     } else {
+      //       this.$notify({
+      //         title: "失败",
+      //         message: res.msg,
+      //         type: "error"
+      //       })
+      //     }
+      //   }).catch(err => {
+      //     this.$notify({
+      //       title: "失败",
+      //       message: err,
+      //       type: "error"
+      //     })
+      //   })
+      // },
+      // 拣货出库
+      procurementchuku(id) {
+        // this.$network.putwarehouse.outbound.OutboundupdateStatus({
+        //   id: id,
+        //   status: 7,
+        //   overruledRemark: ""
+        // }).then(res => {
+        //   // console.log(res);
+        //   if (res.code === 0) {
+        //     this.$notify({
+        //       title: "出库",
+        //       type: "success"
+        //     })
+        //     this.getOutboundList()
+        //   } else {
+        //     this.$notify({
+        //       title: "失败",
+        //       message: res.msg,
+        //       type: "error"
+        //     })
+        //   }
+        // }).catch(err => {
+        //   this.$notify({
+        //     title: "失败",
+        //     message: err,
+        //     type: "error"
+        //   })
+        // })
+      },
+      // 审核驳回
+      procurementBohui(id) {
+        this.bohuiID = id
+        this.dialogVisibleBohui = true
+      },
+      dialogVisibleBohuiq() {
+        this.$refs["ruleFormBohui"].resetFields();
+        this.bohuiID = ""
+      },
+      Bohuiq(ruleFormBohui) {
+        this.$refs[ruleFormBohui].validate((valid) => {
+          if (valid) {
+            this.$network.putwarehouse.outbound.OutboundupdateStatus({
+              id: this.bohuiID,
+              status: 3,
+              overruledRemark: this.ruleFormBohui.overruledRemark
+            }).then(res => {
+              // console.log(res);
+              if (res.code === 0) {
+                this.$notify({
+                  title: "驳回成功",
+                  type: "success"
+                })
+
+                this.getOutboundList()
+                this.dialogVisibleBohui = false
+
+              } else {
+                this.$notify({
+                  title: "失败",
+                  message: res.msg,
+                  type: "error"
+                })
+              }
+            }).catch(err => {
+              this.$notify({
+                title: "失败",
+                message: err,
+                type: "error"
+              })
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: "请填写完整信息",
+              showClose: true
+            })
+          }
+        })
+      }
+
     },
+
     created() {
       this.getOutboundList();
     },

@@ -47,7 +47,8 @@
                 <el-tag size="small" type="success" v-if="scope.row.status == 1">初始录入</el-tag>
                 <el-tag size="small" type="warning" v-else-if="scope.row.status == 2">审核中</el-tag>
                 <el-tag size="small" type="danger" v-else-if="scope.row.status == 3">审核驳回</el-tag>
-                <el-tag size="small" type="info" v-else-if="scope.row.status == 4">采购中</el-tag>
+                <el-tag size="small" type="success" v-else-if="scope.row.status == 4">审核通过</el-tag>
+                <el-tag size="small" type="info" v-else-if="scope.row.status == 5">采购中</el-tag>
                 <el-tag size="small" v-else>完成</el-tag>
               </template>
             </el-table-column>
@@ -65,11 +66,19 @@
             <el-table-column align="center" label="操作" width="250">
               <template slot-scope="scope">
                 <!-- {{scope.row.count}} -->
-                <el-popconfirm confirmButtonText='好的' v-if="scope.row.status==4" cancelButtonText='不用了'
+                <!-- <el-popconfirm confirmButtonText='好的' v-if="scope.row.status==5" cancelButtonText='不用了'
                   icon="el-icon-info" iconColor="#e3c048" title="确定此采购订单入库?"
                   @onConfirm="procurementShenHeRuku(scope.row.id)">
                   <el-tooltip slot="reference" class="item" effect="dark" content="入库" placement="left">
                     <el-button type="text" icon="el-icon-s-check" style="marginRight:5px" size="medium">
+                    </el-button>
+                  </el-tooltip>
+                </el-popconfirm> -->
+                <el-popconfirm confirmButtonText='好的' v-if="scope.row.status==5" cancelButtonText='不用了'
+                  icon="el-icon-info" iconColor="#e3c048" title="确定此采购订单采购?"
+                  @onConfirm="procurementShenHeRukusheng(scope.row.id)">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="采购入库" placement="left">
+                    <el-button type="text" icon="el-icon-check" style="marginRight:5px" size="medium">
                     </el-button>
                   </el-tooltip>
                 </el-popconfirm>
@@ -100,7 +109,7 @@
                 <el-popconfirm confirmButtonText='好的' cancelButtonText='不用了' icon="el-icon-info" iconColor="red"
                   title="确定删除采购订单吗？" @onConfirm="procurementDelete(scope.row.id)">
                   <el-tooltip slot="reference" class="item" effect="dark" content="删除"
-                    v-if="scope.row.status == 5? false :true " placement="right">
+                    v-if="scope.row.status == 6? false :true " placement="right">
                     <el-button style="marginLeft:5px" icon="el-icon-delete" type="danger" size="mini">
                     </el-button>
                   </el-tooltip>
@@ -372,7 +381,7 @@
           pageNum: this.pageNum,
           size: this.size
         }).then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code === 0) {
             this.procurementData = res.data.purchaseVOS
             this.total = res.data.total
@@ -400,15 +409,15 @@
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize
-        this.getProcurementList()
+        this.procurementSearch()
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage
-        this.getProcurementList()
+        this.procurementSearch()
       },
       procurementSearchInput(val) {
         if (val == "") {
-          this.getProcurementList()
+          this.procurementSearch()
         }
       },
       // 搜索
@@ -417,7 +426,7 @@
           pageNum: this.pageNum,
           size: this.size,
           code: this.input3,
-          status: this.select == 0 ? "" : this.select
+          status: this.select == 0 ? null : this.select
         }).then(res => {
           // console.log(res);
           if (res.code === 0) {
@@ -892,17 +901,17 @@
           })
         })
       },
-      // 入库
-      procurementShenHeRuku(id) {
+      //  审核中
+      procurementShenHeRukusheng(id) {
         this.$network.putwarehouse.procurement.procurementUpdateStatus({
           id: id,
-          status: 5,
+          status: 6,
           overruledRemark: ""
         }).then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code === 0) {
             this.$notify({
-              title: "入库成功",
+              title: "采购成功",
               type: "success"
             })
             this.getProcurementList()
@@ -921,6 +930,36 @@
           })
         })
       },
+
+      // 入库
+      // procurementShenHeRuku(id) {
+      //   this.$network.putwarehouse.procurement.procurementUpdateStatus({
+      //     id: id,
+      //     status: 6,
+      //     overruledRemark: ""
+      //   }).then(res => {
+      //     console.log(res);
+      //     if (res.code === 0) {
+      //       this.$notify({
+      //         title: "入库成功",
+      //         type: "success"
+      //       })
+      //       this.getProcurementList()
+      //     } else {
+      //       this.$notify({
+      //         title: "失败",
+      //         message: res.msg,
+      //         type: "error"
+      //       })
+      //     }
+      //   }).catch(err => {
+      //     this.$notify({
+      //       title: "失败",
+      //       message: err,
+      //       type: "error"
+      //     })
+      //   })
+      // },
       dialogVisibleBohuiq() {
         this.$refs["ruleFormBohui"].resetFields();
         this.bohuiID = ""

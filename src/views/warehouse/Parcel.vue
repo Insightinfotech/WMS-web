@@ -66,8 +66,14 @@
             <el-table-column type="index" align="center" label="#" width="50">
             </el-table-column>
             <el-table-column prop="code" align="center" label="货架编码">
+              <template slot-scope="scope">
+                <el-button size="small" type="text">{{scope.row.code}}</el-button>
+              </template>
             </el-table-column>
             <el-table-column prop="name" align="center" label="货架名称">
+              <template slot-scope="scope">
+                <el-button size="small" type="text">{{scope.row.name}}</el-button>
+              </template>
             </el-table-column>
             <el-table-column prop="lastOperationUser" align="center" label="工具人">
               <template slot-scope="scope">
@@ -75,8 +81,22 @@
               </template>
             </el-table-column>
             <el-table-column prop="warehouse.name" align="center" label="所属仓库">
+              <template slot-scope="scope">
+                <!-- {{scope.row.warehouse}} -->
+                <el-tag size="small" type="info" v-if="scope.row.warehouse == null || scope.row.warehouse == ''">暂无
+                </el-tag>
+                <el-tag size="small" v-else>{{scope.row.warehouse.name}}
+                </el-tag>
+              </template>
             </el-table-column>
             <el-table-column prop="reservoir.name" align="center" label="所属库区">
+              <template slot-scope="scope">
+                <!-- {{scope.row.warehouse}} -->
+                <el-tag size="small" type="info" v-if="scope.row.reservoir == null || scope.row.reservoir == ''">暂无
+                </el-tag>
+                <el-tag size="small" type="warning" v-else>{{scope.row.reservoir.name}}
+                </el-tag>
+              </template>
             </el-table-column>
             <el-table-column align="center" label="创建时间" width="180">
               <template slot-scope="scope">
@@ -111,13 +131,14 @@
     <el-dialog title="添加货架" @close="addreservoirClose" :visible.sync="dialogVisible" width="25%">
       <el-form :model="addreservoir" ref="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="货架编号" prop="code">
-          <el-input v-model="addreservoir.code"></el-input>
+          <el-input v-model="addreservoir.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjia">点击生成</el-button>
         </el-form-item>
         <el-form-item label="货架名称" prop="name">
-          <el-input v-model="addreservoir.name"></el-input>
+          <el-input v-model="addreservoir.name" style="width:60%"></el-input>
         </el-form-item>
         <el-form-item label="货架层数" prop="layer">
-          <el-input v-model="addreservoir.layer"></el-input>
+          <el-input v-model="addreservoir.layer" style="width:20%"></el-input>
         </el-form-item>
         <el-form-item label="所属仓库" prop="warehouseId">
           <el-cascader v-model="addreservoir.warehouseId" :options="warehouseVOSData" :props="optionsProps">
@@ -137,13 +158,14 @@
       <el-form :model="addreservoirEdit" ref="ruleFormEdit" :rules="rulesEdit" label-width="100px"
         class="demo-ruleForm">
         <el-form-item label="货架编号" prop="code">
-          <el-input v-model="addreservoirEdit.code"></el-input>
+          <el-input v-model="addreservoirEdit.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjiaEDit">点击生成</el-button>
         </el-form-item>
         <el-form-item label="货架名称" prop="name">
-          <el-input v-model="addreservoirEdit.name"></el-input>
+          <el-input v-model="addreservoirEdit.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="货架层数" prop="layer">
-          <el-input v-model="addreservoirEdit.layer"></el-input>
+          <el-input v-model="addreservoirEdit.layer" style="width:20%"></el-input>
         </el-form-item>
         <el-form-item label="所属仓库" prop="warehouseId">
           <el-cascader v-model="addreservoirEdit.warehouseId" :options="warehouseVOSData" :props="optionsProps">
@@ -161,6 +183,9 @@
   </div>
 </template>
 <script>
+  import {
+    randomNumberHJ
+  } from "@/plugins/unit.js"
   export default {
     data() {
       return {
@@ -177,24 +202,25 @@
         dialogVisible: false,
         dialogVisibleEdit: false,
         addreservoir: {
-          warehouseId: []
+          warehouseId: [],
+          code: ""
         },
         addreservoirEdit: {},
         rules: {
           code: [{
             required: true,
             message: '请输入货架编号',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           name: [{
             required: true,
             message: '请输入货架名称',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           layer: [{
             required: true,
             message: '请输入层数',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           // warehouseId: [{
           //   required: true,
@@ -206,17 +232,17 @@
           code: [{
             required: true,
             message: '请输入货架编号',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           name: [{
             required: true,
             message: '请输入货架名称',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           layer: [{
             required: true,
             message: '请输入层数',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }]
         },
         optionsProps: {
@@ -235,11 +261,21 @@
           pageNum: this.pageNum,
           size: this.size
         }).then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code === 0) {
             this.parcelListData = res.data.shelvesVOS
             this.total = res.data.total
             this.warehouseVOSData = res.data.warehouseVOS
+            let p1 = res.data.warehouseVOS
+            p1.forEach(v => {
+              if (v.reservoirVOS.length >= 1) {
+                v.reservoirVOS.forEach(m => {
+                  if (m.reservoirVOS <= 0) {
+                    m.reservoirVOS = null
+                  }
+                })
+              }
+            });
             let data = JSON.parse(JSON.stringify(res.data.warehouseVOS))
             data.unshift({
               name: "全部",
@@ -261,20 +297,31 @@
           })
         })
       },
+      dianjia() {
+        let HJ = randomNumberHJ()
+        // console.log(JH);
+        this.addreservoir.code = HJ
+      },
+      dianjiaEDit() {
+        let HJ = randomNumberHJ()
+        // console.log(JH);
+        this.addreservoirEdit.code = HJ
+      },
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize
-        this.getparcelList()
+        this.reservoirSearch()
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage
-        this.getparcelList()
+        this.reservoirSearch()
       },
       // 添加弹框关闭回调
       addreservoirClose() {
         this.$refs["ruleForm"].resetFields();
         this.addreservoir = {
-          warehouseId: []
+          warehouseId: [],
+          code: ""
         }
       },
       addreservoirCloseEdit() {
@@ -333,49 +380,49 @@
       reservoirSearch() {
         let p1 = this.input3
         let p2 = this.input
-        let p3 = this.select[0] == 0 ? '' : this.select[0]
+        let p3 = this.select[0] == 0 ? null : this.select[0]
         let p4 = this.select[1]
         let p5 = this.select
         // console.log(p1, p2, p3);
-        if (p1 == "" && p2 == "" && p5.length <= 0) {
-          this.$notify({
-            title: "失败",
-            message: "查询内容不可以为空",
-            type: "error"
-          })
-        } else {
-          this.$network.warehouse.Parcel.parcelList({
-            pageNum: this.pageNum,
-            size: this.size,
-            code: p2,
-            name: p1,
-            warehouseId: p3,
-            reservoirId: p4
-          }).then(res => {
-            // console.log(res);
-            if (res.code === 0) {
-              this.parcelListData = res.data.shelvesVOS
-              this.total = res.data.total
-              this.$notify({
-                title: "成功",
-                message: "查询成功",
-                type: "success"
-              })
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.msg,
-                type: "error"
-              })
-            }
-          }).catch(err => {
+        // if (p1 == "" && p2 == "" && p5.length <= 0) {
+        //   this.$notify({
+        //     title: "失败",
+        //     message: "查询内容不可以为空",
+        //     type: "error"
+        //   })
+        // } else {
+        this.$network.warehouse.Parcel.parcelList({
+          pageNum: this.pageNum,
+          size: this.size,
+          code: p2 == "" ? null : p2,
+          name: p1 == "" ? null : p1,
+          warehouseId: p3,
+          reservoirId: p4
+        }).then(res => {
+          console.log(res);
+          if (res.code === 0) {
+            this.parcelListData = res.data.shelvesVOS
+            this.total = res.data.total
+            this.$notify({
+              title: "成功",
+              message: "查询成功",
+              type: "success"
+            })
+          } else {
             this.$notify({
               title: "失败",
-              message: err,
+              message: res.msg,
               type: "error"
             })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
           })
-        }
+        })
+        // }
       },
       reservoirInput(val) {
         if (val == "") {

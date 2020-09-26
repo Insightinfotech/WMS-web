@@ -100,13 +100,17 @@ export function OutboundAddDeit({
 export function OutboundupdateStatus({
   id,
   status,
-  overruledRemark
+  overruledRemark,
+  logisticsName,
+  logisticsNumber
 }) {
   return new Promise((resolve, reject) => {
     Outbound.OutboundupdateStatus({
       id,
       status,
-      overruledRemark
+      overruledRemark,
+      logisticsName,
+      logisticsNumber
     }).then(res => {
       resolve(res)
     }).catch(err => {
@@ -190,5 +194,33 @@ export function stockOutDetailListIdDelete(
     }).catch(err => {
       reject(err)
     })
+  })
+}
+export function OutboundstockOutLogList({
+  pageNum,
+  size,
+  stockOutCode,
+  stockOutType,
+  sku,
+  gestore,
+  startTime,
+  endTime
+}) {
+  return new Promise((resolve, reject) => {
+    Outbound.OutboundstockOutLogList({
+      pageNum,
+      size,
+      stockOutCode,
+      stockOutType,
+      sku,
+      gestore,
+      startTime,
+      endTime
+    }).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+
   })
 }

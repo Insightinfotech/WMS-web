@@ -58,16 +58,27 @@
             <el-table-column type="index" align="center" label="#">
             </el-table-column>
             <el-table-column prop="code" align="center" label="仓库编号" width="150">
+              <template slot-scope="scope">
+                <el-button size="small" type="text">{{scope.row.code}}</el-button>
+              </template>
             </el-table-column>
             <el-table-column prop="name" align="center" label="仓库名称" width="150">
+              <template slot-scope="scope">
+                <el-tag size="small">{{scope.row.name}}</el-tag>
+              </template>
             </el-table-column>
             <el-table-column align="center" label="仓库面积">
               <template slot-scope="scope">
-                <el-tag size="small" v-if="scope.row.acreage == null">暂无</el-tag>
-                <el-tag size="small" v-else> {{scope.row.acreage}}</el-tag>
+                <el-tag size="small" type="info" v-if="scope.row.acreage == null">暂无</el-tag>
+                <el-tag size="small" v-else type="success">{{scope.row.acreage}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="category.name" align="center" label="字典单位">
+              <template slot-scope="scope">
+                <!-- {{scope.row.category}} -->
+                <el-tag v-if="scope.row.category.name==null || scope.row.category.name ==''" type="info">暂无</el-tag>
+                <el-button v-else size="small" type="text">{{scope.row.category.name}}</el-button>
+              </template>
             </el-table-column>
             <el-table-column align="center" label="工具人">
               <template slot-scope="scope">
@@ -112,28 +123,29 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 添加仓库弹框 -->
-    <el-dialog title="添加仓库" @close="addmanagementClose" :visible.sync="dialogVisible" width="25%">
+    <el-dialog title="添加仓库" @close="addmanagementClose" :visible.sync="dialogVisible" width="23%">
       <el-form :model="addmanagement" ref="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="仓库编号" prop="code">
-          <el-input v-model="addmanagement.code"></el-input>
+          <el-input v-model="addmanagement.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjia">点击生成</el-button>
         </el-form-item>
         <el-form-item label="仓库名称" prop="name">
-          <el-input v-model="addmanagement.name"></el-input>
+          <el-input v-model="addmanagement.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="仓库面积" prop="acreage">
-          <el-input v-model="addmanagement.acreage"></el-input>
+          <el-input v-model="addmanagement.acreage" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="仓库负责人" prop="manager">
-          <el-input v-model="addmanagement.manager"></el-input>
+          <el-input v-model="addmanagement.manager" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人电话" prop="phone">
-          <el-input v-model="addmanagement.phone"></el-input>
+          <el-input v-model="addmanagement.phone" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="仓库地址" prop="address">
-          <el-input v-model="addmanagement.address"></el-input>
+          <el-input v-model="addmanagement.address" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input type="textarea" v-model="addmanagement.remark"></el-input>
+          <el-input type="textarea" v-model="addmanagement.remark" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="字典" prop="categoryId">
           <el-cascader v-model="addmanagement.categoryId" :options="options" :props="optionsProps">
@@ -150,27 +162,28 @@
       <el-form :model="addmanagementEdit" ref="ruleFormEdit" :rules="rulesedit" label-width="100px"
         class="demo-ruleForm">
         <el-form-item label="仓库编号" prop="code">
-          <el-input v-model="addmanagementEdit.code"></el-input>
+          <el-input v-model="addmanagementEdit.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjiaEDit">点击生成</el-button>
         </el-form-item>
         <el-form-item label="仓库名称" prop="name">
-          <el-input v-model="addmanagementEdit.name"></el-input>
+          <el-input v-model="addmanagementEdit.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="仓库面积" prop="acreage">
-          <el-input v-model="addmanagementEdit.acreage"></el-input>
+          <el-input v-model="addmanagementEdit.acreage" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="仓库负责人" prop="manager">
-          <el-input v-model="addmanagementEdit.manager"></el-input>
+          <el-input v-model="addmanagementEdit.manager" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="负责人电话" prop="phone">
-          <el-input v-model="addmanagementEdit.phone"></el-input>
+          <el-input v-model="addmanagementEdit.phone" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="仓库地址" prop="address">
-          <el-input v-model="addmanagementEdit.address"></el-input>
+          <el-input v-model="addmanagementEdit.address" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input type="textarea" v-model="addmanagementEdit.remark"></el-input>
+          <el-input type="textarea" v-model="addmanagementEdit.remark" style="width:65%"></el-input>
         </el-form-item>
-        <el-form-item label="字典" prop="categoryId">
+        <el-form-item label="字典" prop="selectedCategory">
           <el-cascader v-model="addmanagementEdit.selectedCategory" :options="options" :props="optionsProps">
           </el-cascader>
         </el-form-item>
@@ -231,6 +244,9 @@
   </div>
 </template>
 <script>
+  import {
+    randomNumberCK
+  } from "@/plugins/unit.js"
   export default {
     data() {
       return {
@@ -267,66 +283,66 @@
           code: [{
             required: true,
             message: '请输入仓库编号',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           name: [{
             required: true,
             message: '请输入仓库名称',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           manager: [{
             required: true,
             message: '请输入仓库负责人',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           phone: [{
               required: true,
               message: '请输入负责人电话号码',
-              trigger: 'blur'
+              trigger: ['blur', 'change']
             },
             {
               pattern: /1[34578][012356789]\d{8}/,
               message: '请輸入正确的格式',
-              trigger: 'blur'
+              trigger: ['blur', 'change']
             }
           ],
           categoryId: [{
             required: true,
             message: '请选择字典',
-            trigger: 'change'
+            trigger: ['blur', 'change']
           }]
         },
         rulesedit: {
           code: [{
             required: true,
             message: '请输入仓库编号',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           name: [{
             required: true,
             message: '请输入仓库名称',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           manager: [{
             required: true,
             message: '请输入仓库负责人',
-            trigger: 'blur'
+            trigger: ['blur', 'change']
           }],
           phone: [{
               required: true,
               message: '请输入负责人电话号码',
-              trigger: 'blur'
+              trigger: ['blur', 'change']
             },
             {
               pattern: /^(13[0-9]|15[0|1|3|6|7|8|9]|18[8|9])\d{8}$/,
               message: '请輸入正确的格式',
-              trigger: 'blur'
+              trigger: ['blur', 'change']
             }
           ],
           selectedCategory: [{
             required: true,
             message: '请选择字典',
-            trigger: 'change'
+            trigger: ['blur', 'change']
           }]
         },
         reservoirVOSdata: [],
@@ -358,6 +374,16 @@
             type: "error"
           })
         })
+      },
+      dianjia() {
+        let CK = randomNumberCK()
+        // console.log(JH);
+        this.addmanagement.code = CK
+      },
+      dianjiaEDit() {
+        let CK = randomNumberCK()
+        // console.log(JH);
+        this.addmanagementEdit.code = CK
       },
       // 添加库区
       addkuqu(id) {
@@ -448,11 +474,11 @@
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize
-        this.getManagementList()
+        this.managementSearch()
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage
-        this.getManagementList()
+        this.managementSearch()
       },
       // 添加仓库开启弹框
       managementAdd() {
@@ -624,12 +650,12 @@
       },
       managementInput(vla) {
         if (vla === "") {
-          this.getManagementList()
+          this.managementSearch()
         }
       },
       managementInput3(vla) {
         if (vla === "") {
-          this.getManagementList()
+          this.managementSearch()
         }
       },
       // 搜索
@@ -637,43 +663,44 @@
         let p1 = this.input3
         let p2 = this.input
         // console.log(p1, p2);
-        if (p1 == "" && p2 == "") {
-          this.$notify({
-            title: "失败",
-            message: "查询内容不可以为空",
-            type: "error"
-          })
-        } else {
-          this.$network.warehouse.management.getManagementList({
-            pageNum: this.pageNum,
-            size: this.size,
-            code: p2,
-            name: p1
-          }).then(res => {
-            if (res.code === 0) {
-              this.managementList = res.data.warehouseVOS
-              this.total = res.data.total
+        // if (p1 == "" && p2 == "") {
+        //   this.$notify({
+        //     title: "失败",
+        //     message: "查询内容不可以为空",
+        //     type: "error"
+        //   })
+        // } else {
+        this.$network.warehouse.management.getManagementList({
+          pageNum: this.pageNum,
+          size: this.size,
+          code: p2 == '' ? null : p2,
+          name: p1 == "" ? null : p1
+        }).then(res => {
+          console.log(res);
+          if (res.code === 0) {
+            this.managementList = res.data.warehouseVOS
+            this.total = res.data.total
 
-              this.$notify({
-                title: "成功",
-                message: "查询成功",
-                type: "success"
-              })
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.msg,
-                type: "error"
-              })
-            }
-          }).catch(err => {
+            this.$notify({
+              title: "成功",
+              message: "查询成功",
+              type: "success"
+            })
+          } else {
             this.$notify({
               title: "失败",
-              message: err,
+              message: res.msg,
               type: "error"
             })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
           })
-        }
+        })
+        // }
 
       }
     },

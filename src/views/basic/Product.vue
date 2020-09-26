@@ -106,6 +106,7 @@
             </el-table-column>
             <el-table-column align="center" prop="categoryVO.name" label="产品单位">
               <template slot-scope="scope">
+                <el-tag size="small" type="info" v-if="scope.row.categoryVO == null">暂无</el-tag>
                 <el-tag size="small" effect="dark" type="primary">{{scope.row.categoryVO.name}}</el-tag>
               </template>
             </el-table-column>
@@ -221,10 +222,11 @@
     <el-dialog title="添加产品" @close="addPartnerClose" :visible.sync="dialogVisible" width="25%">
       <el-form :model="addProduct" ref="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="产品编号" prop="code">
-          <el-input v-model="addProduct.code"></el-input>
+          <el-input v-model="addProduct.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjia">点击生成</el-button>
         </el-form-item>
         <el-form-item label="产品名称" prop="name">
-          <el-input v-model="addProduct.name"></el-input>
+          <el-input v-model="addProduct.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="产品类型" prop="skuTypeId">
           <el-select v-model="addProduct.skuTypeId" placeholder="请选择产品类型">
@@ -245,10 +247,10 @@
             </el-option>
           </el-select>
           <el-form-item prop="price">
-            <el-input placeholder="请填写供应商价格" style="marginTop:5px" v-model="domain.price"></el-input>
+            <el-input placeholder="请填写供应商价格" style="marginTop:5px;width:50%" v-model="domain.price"></el-input>
           </el-form-item>
 
-          <el-input style="marginTop:5px" type="textarea" v-model="domain.remark"></el-input>
+          <el-input style="marginTop:5px" type="textarea" placeholder="备注" v-model="domain.remark"></el-input>
           <el-button type="danger" style="marginTop:5px" @click.prevent="removeDomain(domain)">删除</el-button>
         </el-form-item>
       </el-form>
@@ -262,10 +264,11 @@
     <el-dialog title="编辑产品" @close="addPartnerCloseEdit" :visible.sync="dialogVisibleEdit" width="25%">
       <el-form :model="addProductEdit" ref="ruleFormEdit" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="产品编号" prop="code">
-          <el-input v-model="addProductEdit.code"></el-input>
+          <el-input v-model="addProductEdit.code" style="width:60%"></el-input>
+          <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjiaEDit">点击生成</el-button>
         </el-form-item>
         <el-form-item label="产品名称" prop="name">
-          <el-input v-model="addProductEdit.name"></el-input>
+          <el-input v-model="addProductEdit.name" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="产品类型" prop="skuTypeId">
           <el-select v-model="addProductEdit.skuTypeVO" placeholder="请选择产品类型">
@@ -286,9 +289,9 @@
             </el-option>
           </el-select>
           <el-form-item prop="price">
-            <el-input placeholder="请填写供应商价格" style="marginTop:5px" v-model="domain.price"></el-input>
+            <el-input placeholder="请填写供应商价格" style="marginTop:5px;width:50%" v-model="domain.price"></el-input>
           </el-form-item>
-          <el-input style="marginTop:5px" type="textarea" v-model="domain.remark"></el-input>
+          <el-input style="marginTop:5px" type="textarea" placeholder="备注" v-model="domain.remark"></el-input>
           <el-button type="danger" style="marginTop:5px" @click.prevent="removeDomains(domain)">删除</el-button>
         </el-form-item>
       </el-form>
@@ -301,6 +304,9 @@
   </div>
 </template>
 <script>
+  import {
+    randomNumberCP
+  } from "@/plugins/unit.js"
   export default {
     data() {
       return {
@@ -373,6 +379,16 @@
       }
     },
     methods: {
+      dianjia() {
+        let CP = randomNumberCP()
+        // console.log(JH);
+        this.addProduct.code = CP
+      },
+      dianjiaEDit() {
+        let CP = randomNumberCP()
+        // console.log(JH);
+        this.addProductEdit.code = CP
+      },
       addDomain() {
         this.addProduct.skuInfos.push({
           supplierId: "",
@@ -407,7 +423,7 @@
           pageNum: this.pageNum,
           size: this.size
         }).then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code === 0) {
             this.skuTypeVOS = res.data.skuTypeVOS;
             this.total = res.data.total
@@ -430,60 +446,60 @@
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize
-        this.getProductTypeList()
+        this.productTypeSearch()
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage
-        this.getProductTypeList()
+        this.productTypeSearch()
       },
       handleSizeChanges(newsize) {
         this.sizes = newsize
-        this.getProductList()
+        this.productSearch()
       },
       handleCurrentChanges(newpage) {
         this.pageNums = newpage
-        this.getProductList()
+        this.productSearch()
       },
       // 搜索
       productTypeSearch() {
         let p1 = this.input3s
         // console.log(p1);
-        if (p1 != "") {
-          this.$network.basic.product.productTypeList({
-            pageNum: this.pageNum,
-            size: this.size,
-            name: p1
-          }).then(res => {
-
-            if (res.code === 0) {
-              this.skuTypeVOS = res.data.skuTypeVOS;
-              this.total = res.data.total
-              this.$notify({
-                title: "成功",
-                message: "查询成功",
-                type: "success"
-              })
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.msg,
-                type: "error"
-              })
-            }
-          }).catch(err => {
+        // if (p1 != "") {
+        this.$network.basic.product.productTypeList({
+          pageNum: this.pageNum,
+          size: this.size,
+          name: p1 == "" ? null : p1
+        }).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.skuTypeVOS = res.data.skuTypeVOS;
+            this.total = res.data.total
+            this.$notify({
+              title: "成功",
+              message: "查询成功",
+              type: "success"
+            })
+          } else {
             this.$notify({
               title: "失败",
               message: res.msg,
               type: "error"
             })
-          })
-        } else {
+          }
+        }).catch(err => {
           this.$notify({
             title: "失败",
-            message: "查询内容不可以为空",
+            message: res.msg,
             type: "error"
           })
-        }
+        })
+        // } else {
+        //   this.$notify({
+        //     title: "失败",
+        //     message: "查询内容不可以为空",
+        //     type: "error"
+        //   })
+        // }
       },
       // 监听input框的变化
       productInputs(vla) {
@@ -657,7 +673,7 @@
           pageNum: this.pageNum,
           size: this.size
         }).then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code === 0) {
             this.categoryTypeVOS = res.data.categoryTypeVOS
             this.skuTypeVOSs = res.data.skuTypeVOS
@@ -751,45 +767,45 @@
         let p3 = this.select
         let p4 = this.select1
         // console.log(p1, p2);
-        if (p1 == "" && p2 == "" && p3 == "" && p4 == "") {
-          this.$notify({
-            title: "失败",
-            message: "查询内容不可以为空",
-            type: "error"
-          })
-        } else {
-          this.$network.basic.product.productList({
-            pageNum: this.pageNums,
-            size: this.sizes,
-            code: p2,
-            name: p1,
-            skuType: p3,
-            supplier: p4
-          }).then(res => {
-            // console.log(res);
-            if (res.code === 0) {
-              this.skuVOS = res.data.skuVOS;
-              this.totals = res.data.total
-              this.$notify({
-                title: "成功",
-                message: "查询成功",
-                type: "success"
-              })
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.msg,
-                type: "error"
-              })
-            }
-          }).catch(err => {
+        // if (p1 == "" && p2 == "" && p3 == "" && p4 == "") {
+        //   this.$notify({
+        //     title: "失败",
+        //     message: "查询内容不可以为空",
+        //     type: "error"
+        //   })
+        // } else {
+        this.$network.basic.product.productList({
+          pageNum: this.pageNums,
+          size: this.sizes,
+          code: p2 == '' ? null : p2,
+          name: p1 == "" ? null : p1,
+          skuType: p3 == undefined ? null : p3,
+          supplier: p4 == undefined ? null : p4
+        }).then(res => {
+          // console.log(res);
+          if (res.code === 0) {
+            this.skuVOS = res.data.skuVOS;
+            this.totals = res.data.total
+            this.$notify({
+              title: "成功",
+              message: "查询成功",
+              type: "success"
+            })
+          } else {
             this.$notify({
               title: "失败",
-              message: err,
+              message: res.msg,
               type: "error"
             })
+          }
+        }).catch(err => {
+          this.$notify({
+            title: "失败",
+            message: err,
+            type: "error"
           })
-        }
+        })
+        // }
 
       },
       // 删除

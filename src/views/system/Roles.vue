@@ -11,7 +11,7 @@
             <!-- 添加用户 -->
             <el-button type="primary" style="marginBottom:15px" @click="adduser">添加用户</el-button>
             <el-card>
-              <el-table stripe :data="userList">
+              <el-table stripe :data="userList" border style="width:100%">
                 <el-table-column type="expand">
                   <template slot-scope="scope">
                     <div class="rolesexpand">
@@ -47,13 +47,13 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column type="index" align="center" label="编号">
+                <el-table-column type="index" align="center" label="编号" width="50">
                 </el-table-column>
                 <el-table-column align="center" prop="id" label="用户ID">
                 </el-table-column>
                 <el-table-column align="center" label="用户名">
                   <template slot-scope="scope">
-                    <el-tag effect="dark">{{scope.row.username}}</el-tag>
+                    <el-button type="text" size="small">{{scope.row.username}}</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column align="center" label="创建于">
@@ -125,9 +125,9 @@
           <el-form-item label="用户名" prop="username">
             <el-input v-model="editData.username"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password">
+          <!-- <el-form-item label="密码" prop="password">
             <el-input v-model="editData.password" type="password" show-password></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="角色列表">
             <el-checkbox-group v-model="checkList">
               <el-checkbox :checked="item.checked" v-for="item in editData.roles" :key="item.id" :label="item.id">
@@ -221,6 +221,7 @@
           pageNum: this.pageNum,
           size: this.size
         }).then(res => {
+          console.log(res);
           if (res.code === 0) {
             this.userList = res.data.list
             this.total = res.data.total
@@ -434,13 +435,16 @@
       editUserRols(id) {
         this.rolesId = id
         this.dialogVisibleedit = true
-        let data = this.userList.filter(v => {
+        let userLists = JSON.parse(JSON.stringify(this.userList))
+        let data = userLists.filter(v => {
           if (v.id === id) {
             return v
           }
         })
         let rolesId = data[0].roles
-        let roleslist = this.userRoleslist
+        let roleslist = JSON.parse(JSON.stringify(this.userRoleslist))
+        // console.log(rolesIds);
+        // console.log(roleslist);
         roleslist.forEach(item => {
           if (rolesId.find(i => item.id === i.id)) {
             // console.log(item);
@@ -480,7 +484,7 @@
         let id = this.rolesId
         let username = this.editData.username
         let roleIds = this.checkList
-        // console.log(data, rolelds);
+        // console.log(id, username,roleIds);
         this.$network.home.roles.editUser(id, username, roleIds).then(res => {
           // console.log(res);
           if (res.code === 0) {

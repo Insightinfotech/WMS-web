@@ -63,7 +63,31 @@ const routes = [{
       {
         path: "/home/putwarehouse/outbound",
         component: () => import("../views/putwarehouse/Outbound")
-      }
+      },
+      {
+        path: "/home/putwarehouse/picking",
+        component: () => import("../views/putwarehouse/Picking")
+      },
+      {
+        path: "/home/putwarehouse/shifting",
+        component: () => import("../views/putwarehouse/Shifting")
+      },
+      {
+        path: "/home/putwarehouse/check",
+        component: () => import("../views/putwarehouse/Check")
+      },
+      {
+        path: "/home/logit/log",
+        component: () => import("../views/logit/Log")
+      },
+      {
+        path: "/home/putwarehouse/records",
+        component: () => import("../views/putwarehouse/Records")
+      },
+      {
+        path: "/home/putwarehouse/delivery",
+        component: () => import("../views/putwarehouse/Delivery")
+      },
     ]
   },
   {

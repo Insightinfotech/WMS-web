@@ -91,15 +91,19 @@ export default class Outbound {
   static OutboundupdateStatus({
     id,
     status,
-    overruledRemark
+    overruledRemark,
+    logisticsName,
+    logisticsNumber
   }) {
     return request({
       url: "/stockOut/updateStatus",
       method: "PUT",
-      data: {
+      params: {
         id,
         status,
-        overruledRemark
+        overruledRemark,
+        logisticsName,
+        logisticsNumber
       }
     }, {
       token: store.getters.userToken,
@@ -173,6 +177,33 @@ export default class Outbound {
     return request({
       url: `/stockOutDetail/delete/${id}`,
       method: "DELETE",
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static OutboundstockOutLogList({
+    pageNum,
+    size,
+    stockOutCode,
+    stockOutType,
+    sku,
+    gestore,
+    startTime,
+    endTime
+  }) {
+    return request({
+      url: "/stockOut/stockOutLog",
+      method: "GET",
+      params: {
+        pageNum,
+        size,
+        stockOutCode,
+        stockOutType,
+        sku,
+        gestore,
+        startTime,
+        endTime
+      }
     }, {
       token: store.getters.userToken
     })

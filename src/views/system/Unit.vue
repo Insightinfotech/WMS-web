@@ -6,7 +6,7 @@
         <!-- 添加字典按钮 -->
         <el-button type="primary" style="marginRight:35px" @click="addUserUnit">添加字典</el-button>
         <!-- 搜索框 -->
-        <el-input clearable @input="unitval" placeholder="请输入内容" v-model="inputunit" style="marginBottom:15px"
+        <el-input clearable @input="unitval" placeholder="请输入字典名称" v-model="inputunit" style="marginBottom:15px"
           class="input-with-select">
           <el-select class="select_option" v-model="select" slot="prepend" placeholder="请选择分类">
             <el-option :label="item.name" v-for="item in unitdataclasscopy" :key="item.id" :value="item.id"></el-option>
@@ -26,7 +26,10 @@
             </el-table-column>
             <el-table-column align="center" label="字典分类">
               <template slot-scope="scope">
-                <el-tag size="small" type="danger">{{scope.row.categoryType.name}}</el-tag>
+                <!-- {{scope.row.categoryType}} -->
+                <el-tag size="small" type="info"
+                  v-if="scope.row.categoryType.name==''||scope.row.categoryType.name==null">暂无</el-tag>
+                <el-tag size="small" type="danger" v-else>{{scope.row.categoryType.name}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="remark" align="center" label="备注">
@@ -428,12 +431,12 @@
       // 搜索
       unitSearch() {
         this.$network.home.unit.unitSearchName({
-          pageNum: 1,
-          size: 10,
-          categoryTypeId: this.select,
-          name: this.inputunit
+          pageNum: this.pageNum,
+          size: this.size,
+          categoryTypeId: this.select == undefined ? null : this.select,
+          name: this.inputunit == "" ? null : this.inputunit
         }).then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code === 0) {
             this.unitdata = res.data.categoryVOS
             this.total = res.data.total
@@ -457,11 +460,11 @@
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize
-        this.getUnitlist()
+        this.unitSearch()
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage
-        this.getUnitlist()
+        this.unitSearch()
       },
       handleSizeChanges(newsize) {
         this.sizes = newsize
@@ -707,7 +710,7 @@
 </script>
 <style lang="scss" scoped>
   .input-with-select {
-    width: 30%;
+    width: 25%;
     background-color: #fff !important;
   }
 

@@ -206,3 +206,32 @@ export function stockInDetailAddEdit({
     })
   })
 }
+export function gostorageListstockInLog({
+  pageNum,
+  size,
+  stockInCode,
+  purchaseCode,
+  stockInType,
+  sku,
+  gestore,
+  startTime,
+  endTime
+}) {
+  return new Promise((resolve, reject) => {
+    Gostorage.gostorageListstockInLog({
+      pageNum,
+      size,
+      stockInCode,
+      purchaseCode,
+      stockInType,
+      sku,
+      gestore,
+      startTime,
+      endTime
+    }).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}

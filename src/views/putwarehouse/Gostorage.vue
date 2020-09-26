@@ -96,7 +96,8 @@
                 <el-tag size="small" type="success" v-if="scope.row.status == 1">初始录入</el-tag>
                 <el-tag size="small" type="warning" v-else-if="scope.row.status == 2">审核中</el-tag>
                 <el-tag size="small" type="danger" v-else-if="scope.row.status == 3">审核驳回</el-tag>
-                <el-tag size="small" type="info" v-else-if="scope.row.status == 4">采购中</el-tag>
+                <!-- <el-tag size="small" type="success" v-else-if="scope.row.status == 4">已审核</el-tag> -->
+                <el-tag size="small" type="info" v-else-if="scope.row.status == 4">入库中</el-tag>
                 <el-tag size="small" v-else>完成</el-tag>
               </template>
             </el-table-column>
@@ -113,15 +114,22 @@
             </el-table-column>
             <el-table-column align="center" label="操作" width="230">
               <template slot-scope="scope">
-
                 <el-popconfirm confirmButtonText='好的' v-if="scope.row.status==4" cancelButtonText='不用了'
+                  icon="el-icon-info" iconColor="#e3c048" title="确定订单入库?"
+                  @onConfirm="procurementShenHeRukusheng(scope.row.id)">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="入库" placement="left">
+                    <el-button type="text" icon="el-icon-check" style="marginRight:5px" size="medium">
+                    </el-button>
+                  </el-tooltip>
+                </el-popconfirm>
+                <!-- <el-popconfirm confirmButtonText='好的' v-if="scope.row.status==5" cancelButtonText='不用了'
                   icon="el-icon-info" iconColor="#e3c048" title="确定订单入库?"
                   @onConfirm="procurementShenHeRuku(scope.row.id)">
                   <el-tooltip slot="reference" class="item" effect="dark" content="入库" placement="left">
                     <el-button type="text" icon="el-icon-s-check" style="marginRight:5px" size="medium">
                     </el-button>
                   </el-tooltip>
-                </el-popconfirm>
+                </el-popconfirm> -->
                 <el-popconfirm confirmButtonText='好的' cancelButtonText='不用了' icon="el-icon-info" iconColor="#e3c048"
                   title="确定此采购订单通过审核吗?" v-if="scope.row.status==2" @onConfirm="procurementShenHeTong(scope.row.id)">
                   <el-tooltip slot="reference" class="item" effect="dark" content="审核通过" placement="left">
@@ -560,11 +568,11 @@
       // 分页
       handleSizeChange(newsize) {
         this.size = newsize
-        this.getGostorageList()
+        this.GostorageSearch()
       },
       handleCurrentChange(newpage) {
         this.pageNum = newpage
-        this.getGostorageList()
+        this.GostorageSearch()
       },
       // 编辑
       procurementEdit(id) {
@@ -680,17 +688,16 @@
           })
         })
       },
-      // 入库
-      procurementShenHeRuku(id) {
+      procurementShenHeRukusheng(id){
         this.$network.putwarehouse.gostorage.gostorageUpdateStatus({
           id: id,
           status: 5,
           overruledRemark: ""
         }).then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code === 0) {
             this.$notify({
-              title: "入库成功",
+              title: "审核成功",
               type: "success"
             })
             this.getGostorageList()
@@ -709,6 +716,35 @@
           })
         })
       },
+      // 入库
+      // procurementShenHeRuku(id) {
+      //   this.$network.putwarehouse.gostorage.gostorageUpdateStatus({
+      //     id: id,
+      //     status: 6,
+      //     overruledRemark: ""
+      //   }).then(res => {
+      //     console.log(res);
+      //     if (res.code === 0) {
+      //       this.$notify({
+      //         title: "入库成功",
+      //         type: "success"
+      //       })
+      //       this.getGostorageList()
+      //     } else {
+      //       this.$notify({
+      //         title: "失败",
+      //         message: res.msg,
+      //         type: "error"
+      //       })
+      //     }
+      //   }).catch(err => {
+      //     this.$notify({
+      //       title: "失败",
+      //       message: err,
+      //       type: "error"
+      //     })
+      //   })
+      // },
       // 订单驳回
       dialogVisibleBohuiq() {
         this.$refs["ruleFormBohui"].resetFields();
@@ -763,22 +799,22 @@
       // 搜索
       clearableVal(val) {
         if (val == "") {
-          this.getGostorageList()
+          this.GostorageSearch()
         }
       },
       GostorageSearch() {
-        if (this.input3 === "" && this.input2 === "" && this.input1 === "") {
-          this.$notify({
-            title: '请输入或者选择数据进行搜索',
-            type: "error"
-          })
-        } else {
+        // if (this.input3 === "" && this.input2 === "" && this.input1 === "") {
+        //   this.$notify({
+        //     title: '请输入或者选择数据进行搜索',
+        //     type: "error"
+        //   })
+        // } else {
           this.$network.putwarehouse.gostorage.gostorageList({
             pageNum: this.pageNum,
             size: this.size,
             code: this.input3,
-            type: this.input1 == 0 ? '' : this.input1,
-            status: this.input2 == 0 ? '' : this.input2
+            type: this.input1 == 0 ? null : this.input1,
+            status: this.input2 == 0 ? null : this.input2
           }).then(res => {
             // console.log(res);
             if (res.code === 0) {
@@ -798,7 +834,7 @@
               type: "error"
             })
           })
-        }
+        // }
       },
       // 查看详情按钮
       stockInDetail(id) {
