@@ -24,4 +24,20 @@ export default class Log {
       token: store.getters.userToken
     })
   }
+  static userUpdatePassword({
+    oldPassword,
+    newPassword
+  }) {
+    return request({
+      url: "/user/updatePassword",
+      method: "PUT",
+      params: {
+        oldPassword,
+        newPassword
+      }
+    }, {
+      token: store.getters.userToken,
+      "Content-Type": "x-www-form-urlencoded"
+    })
+  }
 }

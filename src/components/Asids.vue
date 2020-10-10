@@ -43,6 +43,14 @@
                   text: "权限管理"
                 },
                 {
+                  index: "/home/system/personage",
+                  route: {
+                    path: "/home/system/personage"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "个人中心"
+                },
+                {
                   index: "/home/system/unit",
                   route: {
                     path: "/home/system/unit"
@@ -215,7 +223,7 @@
             submenu: {
               index: "logit",
               titleIcon: "el-icon-message-solid",
-              text: "系统管理"
+              text: "日志管理"
             },
             menuItemGroups: [{
               menuItems: [{
@@ -224,7 +232,26 @@
                     path: "/home/logit/log"
                   },
                   itemsIcon: "el-icon-menu",
-                  text: "日志管理"
+                  text: "日志列表"
+                },
+
+              ]
+            }]
+          },
+          {
+            submenu: {
+              index: "statement",
+              titleIcon: "el-icon-s-data",
+              text: "报表管理"
+            },
+            menuItemGroups: [{
+              menuItems: [{
+                  index: "/home/statement/statementlist",
+                  route: {
+                    path: "/home/statement/statementlist"
+                  },
+                  itemsIcon: "el-icon-menu",
+                  text: "报表列表"
                 },
 
               ]

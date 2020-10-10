@@ -13,6 +13,7 @@
         </el-main>
       </el-container>
     </el-container>
+
   </div>
 </template>
 <script>
@@ -26,13 +27,15 @@
     data() {
       return {
         collapse: false,
+
       }
     },
     methods: {
       isfolups(val) {
         // console.log(val);
         this.collapse = val
-      }
+      },
+
     },
   }
 
@@ -40,6 +43,7 @@
 <style lang="scss" scoped>
   .home {
     height: 100%;
+    
 
     .el-container {
       height: 100%;

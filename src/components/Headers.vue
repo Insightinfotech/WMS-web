@@ -10,6 +10,14 @@
       <el-button icon="el-icon-s-custom" type="text" disabled>{{$store.state.username}}</el-button>
       <el-button type="info" @click="loginout">退出</el-button>
     </div>
+    <!-- 修改弹框 -->
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -17,7 +25,8 @@
   export default {
     data() {
       return {
-        topimage: pufu
+        topimage: pufu,
+        dialogVisible: false
       }
     },
     methods: {
@@ -25,6 +34,11 @@
         localStorage.clear()
         this.$store.commit("clearToken")
         this.$router.push("/login")
+      },
+      // 修改密码
+      userEidtPassword() {
+        console.log(1);
+        this.dialogVisible = true
       }
     },
   }
@@ -43,7 +57,7 @@
       font-weight: bold;
     }
 
-    &_bottom {}
+
 
     img {
       //   width: 30%;
@@ -52,6 +66,10 @@
       vertical-align: middle;
 
 
+    }
+
+    .el-dialog {
+      z-index: 9999999;
     }
   }
 

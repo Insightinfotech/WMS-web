@@ -147,8 +147,12 @@ import {
   checkstockDescsave
 } from "api/helpers/putwarehouse/check"
 import {
-  logList
+  logList,
+  userUpdatePassword
 } from "api/helpers/log/log"
+import {
+  getStatementlist
+} from "api/helpers/statement/statementlist"
 class NetworkPlugin {
   install(Vue) {
     Vue.prototype.$network = {
@@ -308,7 +312,13 @@ class NetworkPlugin {
       },
       log: {
         log: {
-          logList
+          logList,
+          userUpdatePassword
+        }
+      },
+      statement: {
+        Statementlist: {
+          getStatementlist
         }
       }
     }

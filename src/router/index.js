@@ -88,6 +88,14 @@ const routes = [{
         path: "/home/putwarehouse/delivery",
         component: () => import("../views/putwarehouse/Delivery")
       },
+      {
+        path: "/home/system/personage",
+        component: () => import("../views/system/Personage")
+      },
+      {
+        path: "/home/statement/statementlist",
+        component: () => import("../views/statement/Statementlist")
+      },
     ]
   },
   {

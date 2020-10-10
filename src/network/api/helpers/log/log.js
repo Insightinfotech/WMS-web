@@ -22,3 +22,18 @@ export function logList({
     })
   })
 }
+export function userUpdatePassword({
+  oldPassword,
+  newPassword
+}) {
+  return new Promise((resolve, reject) => {
+    Log.userUpdatePassword({
+      oldPassword,
+      newPassword
+    }).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
