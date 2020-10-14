@@ -129,12 +129,12 @@
     </el-dialog>
     <!-- 打印弹框 -->
     <el-dialog title="打印拣货单" :visible.sync="dialogVisibledy" width="57%">
-      <el-button type="primary" size="small" v-print="'#printTest'">打印</el-button>
-      <el-card style="marginTop:20px" id="printTest">
+      <el-button type="primary" size="small" v-print="printObj" style="marginBottom:30px">打印</el-button>
+      <div id="printMe">
         <el-alert :title="'拣货单号'+pickingVO.code" type="success" :closable="false" center
           style="width:30%;marginBottom:20px">
         </el-alert>
-        <el-table :data="pickingVO.pickingDetailVOS" border style="width: 100%;">
+        <el-table :data="pickingVO.pickingDetailVOS" border style="width:100%;">
           <el-table-column type="index" label='#' align="center">
           </el-table-column>
           <el-table-column prop="warehouse" label="仓库" align="center">
@@ -153,7 +153,8 @@
         <el-alert v-for="(item,index) in pickingVO.stockOutCodes" style="width:30%;marginTop:20px"
           :title="'出库单单号 '+item" :key="index" type="info" :closable="false" center>
         </el-alert>
-      </el-card>
+      </div>
+     
     </el-dialog>
   </div>
 </template>
@@ -189,7 +190,12 @@
         value: "",
         statusListCopy: [],
         stockOutCodes: [],
-        pickingVO: []
+        pickingVO: [],
+        printObj: {
+          id: "printMe",
+          popTitle: "yong tong",
+          extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>'
+        }
       }
     },
     methods: {
@@ -486,6 +492,17 @@
 
 </script>
 
-<style>
+<style scoped>
+  @media print {
+    @page {
+      size: auto;
+      margin-top: 15mm;
+    }
+
+    body {
+      width: auto;
+      height: auto;
+    }
+  }
 
 </style>

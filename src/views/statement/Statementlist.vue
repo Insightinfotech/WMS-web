@@ -37,11 +37,11 @@
         // console.log(this.onedata);
         let onedata = []
         this.$network.statement.Statementlist.getStatementlist({
-          year: 12
+          year: 2020
         }).then(res => {
           console.log(res);
           if (res.code === 0) {
-
+            let name = res.data.name
             // onedata = res.data.prices
             let myChart = this.$echarts.init(document.getElementById("myChart"))
             let option = {
@@ -50,14 +50,20 @@
               },
               tooltip: {},
               xAxis: {
-                // data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-                data: res.data.prices
+                // data: ["1月", "2月", "3月", "4月", "5月", "6月","7月","8月","9月","10月","11月","12月"]
+                data: res.data.months
               },
               yAxis: {},
               series: [{
-                name: '销量',
-                type: 'bar',
-                data: [5, 20, 36, 10, 10, 20]
+                // name: '销量',
+                name: name,
+                type: 'line',
+                // data: [5, 20, 36, 10, 10, 20]
+                data: res.data.prices,
+                showBackground: true,
+                backgroundStyle: {
+                  color: 'rgba(220, 220, 220, 0.8)'
+                }
                 // data: this.onedata
               }]
             }

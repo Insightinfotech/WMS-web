@@ -40,7 +40,8 @@ import {
   Cascader ,
   Tooltip,
   Popover,
-  Popconfirm 
+  Popconfirm ,
+  Link
   
 } from "element-ui"
 Vue.use(Button)
@@ -81,8 +82,7 @@ Vue.use(Button)
   .use(Tooltip)
   .use(Popover)
   .use(Popconfirm)
-
-
+  .use(Link)
 
 
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>订单管理</h3>
+    <h3>日志管理</h3>
     <!-- tabs -->
     <el-tabs v-model="activeName">
       <!-- 添加采购订单订单 -->
@@ -16,7 +16,7 @@
         placeholder="请输入关键字，模块，菜单，内容" v-model="input3" class="input-with-select">
         <el-button slot="append" icon="el-icon-search" @click="shiftingSearch"></el-button>
       </el-input>
-      <el-tab-pane label="采购单管理" name="first">
+      <el-tab-pane label="日志列表" name="first">
         <el-card>
           <el-table :data="operateLogVOS" border>
             <el-table-column type="expand">
@@ -169,21 +169,21 @@
         }).then(res => {
           // console.log(res);
           if (res.code === 0) {
-            if (res.data.operateLogVOS.length >= 1) {
-              this.$notify({
-                title: "成功",
-                message: '查询成功',
-                type: "success",
-              });
+            // if (res.data.operateLogVOS.length >= 1) {
+              // this.$notify({
+              //   title: "成功",
+              //   message: '查询成功',
+              //   type: "success",
+              // });
               this.operateLogVOS = res.data.operateLogVOS
               this.total = res.data.total
-            } else {
-              this.$notify({
-                title: "成功",
-                message: '暂无数据',
-                type: "success",
-              });
-            }
+            // } else {
+            //   this.$notify({
+            //     title: "成功",
+            //     message: '暂无数据',
+            //     type: "success",
+            //   });
+            // }
           } else {
             this.$notify({
               title: "失败",
@@ -203,7 +203,7 @@
       },
       // 清除
       shiftingSearchclearInput(val) {
-        if (val == '') {
+        if (val == ''|| val == null) {
           this.getLogList()
         }
       }

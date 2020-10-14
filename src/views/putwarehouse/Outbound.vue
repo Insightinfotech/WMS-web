@@ -20,13 +20,40 @@
         v-model="input3" class="input-with-select">
         <el-button slot="append" icon="el-icon-search" @click="GostorageSearch"></el-button>
       </el-input>
-      <el-tab-pane label="采购单管理" name="first">
+      <el-tab-pane label="出库单管理" name="first">
         <el-card>
           <el-table :data="stockOutVOSData" border>
+            <el-table-column type="expand">
+              <template slot-scope="scope">
+                <el-card style="width:20%">
+                  <!-- {{scope.row}} -->
+                  <el-form class="demo-table-expand">
+                    <el-form-item label="物流商:">
+                      <!-- {{scope.row}} -->
+                      <el-tag v-if="scope.row.logisticsName==null" type="info">暂无</el-tag>
+                      <el-tag v-else type="warning">{{scope.row.logisticsName}}</el-tag>
+                    </el-form-item>
+                    <el-form-item label="物流单号:">
+                      <el-tag v-if="scope.row.logisticsNumber==null" type="info">暂无</el-tag>
+                      <el-tag v-else type="warning">{{scope.row.logisticsNumber}}</el-tag>
+                    </el-form-item>
+                    <el-form-item label="备注:">
+                      {{scope.row.remark==null ? '':scope.row.remark}}
+                    </el-form-item>
+                    <el-form-item label="驳回备注:">
+                      {{scope.row.overruledRemark==null ? '':scope.row.overruledRemark}}
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </template>
+
+
+            </el-table-column>
             <el-table-column align="center" label="#" type="index"></el-table-column>
             <el-table-column align="center" label="出库编号">
               <template slot-scope="scope">
-                <el-button type="text" size="mini">{{scope.row.code}}</el-button>
+                <!-- <el-button type="text" size="mini">{{scope.row.code}}</el-button> -->
+                <el-link type="primary" :underline="false">{{scope.row.code}}</el-link>
               </template>
             </el-table-column>
             <el-table-column align="center" label="客户">
@@ -223,7 +250,7 @@
       </span>
     </el-dialog>
     <!-- 点击详情弹框 -->
-    <el-dialog :title="'入库详情单'+ (stockInVOSCode == ''? '': stockInVOSCode)" :visible.sync="dialogVisibleDetail"
+    <el-dialog :title="'出库详情单'+ (stockInVOSCode == ''? '': stockInVOSCode)" :visible.sync="dialogVisibleDetail"
       width="75%" @close="dialogVisibleDetails">
       <el-button
         :disabled="stockInVOStatus==2?true:stockInVOStatus==4?true:stockInVOStatus==5?true :stockInVOStatus==6?true:stockInVOStatus==7?true:false"
@@ -257,12 +284,12 @@
               <el-tag type="danger" size="mini">{{scope.row.lastOperationUser}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="创建时间">
+          <el-table-column align="center" label="创建时间" width="190">
             <template slot-scope="scope">
               <el-tag size="small">{{scope.row.createTime | dateTimeFormat}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="修改时间">
+          <el-table-column align="center" label="修改时间" width="190">
             <template slot-scope="scope">
               <el-tag size="small" v-if="scope.row.updateTime == null">暂无</el-tag>
               <el-tag size="small" type="info" v-else>{{scope.row.updateTime |dateTimeFormat}}</el-tag>
@@ -340,6 +367,30 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 弹出物流信息 -->
+    <el-dialog title="添加物流" :visible.sync="dialogVisiblewuliu" width="20%" @close="dialogVisiblewuliuclose">
+      <el-form :model="ruleFormwuliu" ref="ruleFormwuliu" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="物流商" prop="logisticsName" :rules="[{
+            required: true,
+            message: '请输入物流商',
+            trigger: ['blur','change']
+          }]">
+          <el-input v-model="ruleFormwuliu.logisticsName"></el-input>
+        </el-form-item>
+        <el-form-item label="物流单号" prop="logisticsNumber" :rules="[{
+            required: true,
+            message: '请输入物流单号',
+            trigger: ['blur','change']
+          }]">
+          <el-input v-model="ruleFormwuliu.logisticsNumber"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisiblewuliu = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisiblewuliuAdd('ruleFormwuliu')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -363,6 +414,7 @@
         dialogVisibleDetail: false,
         dialogVisibleDetailAdd: false,
         dialogVisibleBohui: false,
+        dialogVisiblewuliu: false,
         outboundFormdata: {
           code: "",
           type: "",
@@ -394,7 +446,11 @@
           id: "printMe",
           popTitle: "good print",
         },
-        ruleFormBohui: {}
+        ruleFormBohui: {},
+        ruleFormwuliu: {
+
+        },
+        wuliuId: ""
       };
     },
     methods: {
@@ -406,7 +462,7 @@
             size: this.size,
           })
           .then((res) => {
-            // console.log(res);
+            console.log(res);
             if (res.code === 0) {
               this.stockOutVOSData = res.data.stockOutVOS;
               this.total = res.data.total;
@@ -636,35 +692,35 @@
         //     type: "error",
         //   });
         // } else {
-          this.$network.putwarehouse.outbound
-            .OutboundList({
-              pageNum: this.pageNum,
-              size: this.size,
-              code: this.input3,
-              type: this.value1 == -1 ? null : this.value1,
-              status: this.value2 == 0 ? null : this.value2,
-              companyId: this.value3 == undefined ? null : this.value3,
-            })
-            .then((res) => {
-              // console.log(res);
-              if (res.code === 0) {
-                this.stockOutVOSData = res.data.stockOutVOS;
-                this.total = res.data.total;
-              } else {
-                this.$notify({
-                  title: "失败",
-                  message: res.msg,
-                  type: "error",
-                });
-              }
-            })
-            .catch((err) => {
+        this.$network.putwarehouse.outbound
+          .OutboundList({
+            pageNum: this.pageNum,
+            size: this.size,
+            code: this.input3,
+            type: this.value1 == -1 ? null : this.value1,
+            status: this.value2 == 0 ? null : this.value2,
+            companyId: this.value3 == undefined ? null : this.value3,
+          })
+          .then((res) => {
+            // console.log(res);
+            if (res.code === 0) {
+              this.stockOutVOSData = res.data.stockOutVOS;
+              this.total = res.data.total;
+            } else {
               this.$notify({
                 title: "失败",
-                message: err,
+                message: res.msg,
                 type: "error",
               });
+            }
+          })
+          .catch((err) => {
+            this.$notify({
+              title: "失败",
+              message: err,
+              type: "error",
             });
+          });
         // }
       },
       // 点击详情
@@ -1022,6 +1078,8 @@
       // },
       // 拣货出库
       procurementchuku(id) {
+        this.dialogVisiblewuliu = true
+        this.wuliuId = id
         // this.$network.putwarehouse.outbound.OutboundupdateStatus({
         //   id: id,
         //   status: 7,
@@ -1048,6 +1106,52 @@
         //     type: "error"
         //   })
         // })
+      },
+      // 添加物流
+      dialogVisiblewuliuAdd(ruleFormwuliu) {
+        this.$refs[ruleFormwuliu].validate((valid) => {
+          if (valid) {
+            this.$network.putwarehouse.outbound.OutboundupdateStatus({
+              id: this.wuliuId,
+              status: 7,
+              overruledRemark: "",
+              logisticsName: this.ruleFormwuliu.logisticsName,
+              logisticsNumber: this.ruleFormwuliu.logisticsNumber
+            }).then(res => {
+              // console.log(res);
+              if (res.code === 0) {
+                this.$notify({
+                  title: "出库",
+                  type: "success"
+                })
+                this.dialogVisiblewuliu = false
+                this.getOutboundList()
+              } else {
+                this.$notify({
+                  title: "失败",
+                  message: res.msg,
+                  type: "error"
+                })
+              }
+            }).catch(err => {
+              this.$notify({
+                title: "失败",
+                message: err,
+                type: "error"
+              })
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: "请填写完整信息",
+              showClose: true,
+            });
+          }
+        })
+      },
+      // 
+      dialogVisiblewuliuclose() {
+        this.wuliuId = ""
       },
       // 审核驳回
       procurementBohui(id) {
@@ -1108,3 +1212,9 @@
   };
 
 </script>
+<style lang="scss" scoped>
+  .el-link {
+    font-size: 12px;
+  }
+
+</style>

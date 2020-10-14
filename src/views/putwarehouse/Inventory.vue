@@ -25,7 +25,7 @@
         <el-cascader v-model="ruleFormykuadd" :options="warehouseVOS" style="width:200px;marginBottom:15px"
           :props="warehouseVOSProps">
         </el-cascader>
-        <el-input placeholder="请输入内容" v-model="input3" class="input-with-select">
+        <el-input placeholder="请输入产品名称" v-model="input3" class="input-with-select" clearable @input="clearableInput">
           <el-button slot="append" icon="el-icon-search" @click="inventorySearch"></el-button>
         </el-input>
         <!-- 数据表格 -->
@@ -162,6 +162,7 @@
       // 搜索
       inventorySearch() {
         let p1 = this.input3
+        // console.log(p1);
         let p2 = this.ruleFormykuadd[0]
         let p3 = this.ruleFormykuadd[1]
         let p4 = this.ruleFormykuadd[2]
@@ -169,7 +170,7 @@
         this.$network.putwarehouse.inventory.inventoryList({
           pageNum: this.pageNum,
           size: this.size,
-          skuName: p1 == "" ? null : p3,
+          skuName: p1 == "" ? null : p1,
           warehouseId: p2 == undefined ? null : p2 == 0 ? null : p2,
           reservoirId: p3 == undefined ? null : p3,
           shelvesId: p4 == undefined ? null : p4,
@@ -192,8 +193,16 @@
             type: "error"
           })
         })
+      },
+      // 清空
+      clearableInput(val) {
+        // console.log(val);
+        if (val == "" || val == null) {
+          this.inventorySearch()
+        }
       }
     },
+
     created() {
       this.getinventoryList()
     },

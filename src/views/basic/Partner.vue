@@ -67,7 +67,8 @@
             </el-table-column>
             <el-table-column align="center" prop="code" label="编码">
               <template slot-scope="scope">
-                <el-button size="small" type="text">{{scope.row.code}}</el-button>
+                <!-- <el-button size="small" type="text">{{scope.row.code}}</el-button> -->
+                <el-link type="primary" :underline="false">{{scope.row.code}}</el-link>
                 <!-- <el-tag size="small" type="success">{{scope.row.phone}}</el-tag> -->
               </template>
             </el-table-column>
@@ -92,12 +93,12 @@
                 <el-tag size="small" type="warning">{{scope.row.lastOperationUser}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="createTime" label="创建时间">
+            <el-table-column align="center" prop="createTime" label="创建时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" type="success">{{scope.row.createTime | dateTimeFormat}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="updateTime" label="修改时间">
+            <el-table-column align="center" prop="updateTime" label="修改时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" v-if="scope.row.updateTime == null">暂无</el-tag>
                 <el-tag size="small" type="info" v-else> {{scope.row.updateTime | dateTimeFormat}}</el-tag>
@@ -183,7 +184,8 @@
             </el-table-column>
             <el-table-column align="center" prop="code" label="编码">
               <template slot-scope="scope">
-                <el-button size="small" type="text">{{scope.row.code}}</el-button>
+                <!-- <el-button size="small" type="text">{{scope.row.code}}</el-button> -->
+                <el-link type="primary" :underline="false">{{scope.row.code}}</el-link>
                 <!-- <el-tag size="small" type="success">{{scope.row.phone}}</el-tag> -->
               </template>
             </el-table-column>
@@ -204,7 +206,9 @@
               </template>
             </el-table-column>
             <el-table-column align="center" prop="lastOperationUser" label="工具人">
-
+              <template slot-scope="scope">
+                <el-tag size="small" type="warning">{{scope.row.lastOperationUser}}</el-tag>
+              </template>
             </el-table-column>
             <el-table-column align="center" prop="createTime" label="创建时间">
               <template slot-scope="scope">
@@ -1203,6 +1207,10 @@
 </script>
 <style lang="scss" scoped>
   .partner {
+    .el-link {
+      font-size: 12px;
+    }
+
     .gongyinhs {
       display: flex;
 

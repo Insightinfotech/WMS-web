@@ -18,7 +18,7 @@
       </el-input>
       <!-- <el-cascader v-model="valueoptions" :options="options" :props="{ multiple: true,}" clearable collapse-tags>
       </el-cascader> -->
-      <el-tab-pane label="采购单管理" name="first">
+      <el-tab-pane label="移库单列表" name="first">
         <el-card>
           <el-table :data="moveVOS" border style="width:100%">
             <el-table-column type="expand">
@@ -51,7 +51,7 @@
                 <el-tag size="mini" v-else>完成</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="详情" width="100">
+            <el-table-column align="center" label="详情" width="70">
               <template slot-scope="scope">
                 <el-button type="primary" icon="el-icon-s-grid" @click="getyikuData(scope.row.id)" size="mini">
                 </el-button>
@@ -83,12 +83,12 @@
                 <el-tag size="mini" v-else type="danger" style="marginLeft:5px">{{scope.row.targetLayer}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="创建时间" width="180">
+            <el-table-column align="center" label="创建时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small">{{scope.row.createTime | dateTimeFormat}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="修改时间" width="180">
+            <el-table-column align="center" label="修改时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" v-if="scope.row.updateTime == null">暂无</el-tag>
                 <el-tag size="small" type="info" v-else>{{scope.row.updateTime |dateTimeFormat}}</el-tag>
@@ -277,12 +277,12 @@
               <el-tag type="danger" size="mini">{{scope.row.lastOperationUser}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="创建时间" width="180">
+          <el-table-column align="center" label="创建时间" width="190">
             <template slot-scope="scope">
               <el-tag size="small">{{scope.row.createTime | dateTimeFormat}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="修改时间" width="180">
+          <el-table-column align="center" label="修改时间" width="190">
             <template slot-scope="scope">
               <el-tag size="small" v-if="scope.row.updateTime == null">暂无</el-tag>
               <el-tag size="small" type="info" v-else>{{scope.row.updateTime |dateTimeFormat}}</el-tag>
@@ -322,8 +322,8 @@
         <el-form-item label="产品已有数量">
           <el-input v-model="skuarr.quantity" style="width:40%" disabled></el-input>
         </el-form-item>
-        <el-form-item label="产品数量" prop="quantity"
-          :rules="[{ required: true, message: '请输入数量', trigger: ['blur','change'] },{pattern: /^[1-9]*$/, message: '请输入正确的数量', trigger: ['blur', 'change']}]">
+        <el-form-item label="可移动数量" prop="quantity"
+          :rules="[{ required: true, message: '请输入数量', trigger: ['blur','change'] },{pattern: /^([1-9]\d*|0)$/, message: '请输入正确的数量', trigger: ['blur', 'change']}]">
           <el-input v-model="ruleFormDescSku.quantity" style="width:40%"></el-input>
         </el-form-item>
       </el-form>
@@ -732,7 +732,7 @@
               title: "删除成功",
               type: "success"
             })
-            this.getPicingList()
+            this.shiftingSearch()
           } else {
             this.$notify({
               title: "失败",

@@ -22,7 +22,7 @@
         </el-select>
         <el-button slot="append" icon="el-icon-search" @click="shiftingSearch"></el-button>
       </el-input>
-      <el-tab-pane label="采购单管理" name="first">
+      <el-tab-pane label="入库列表" name="first">
         <el-card>
           <el-table :data="stockLogVOS" border>
             <el-table-column align="center" label="#" type="index"></el-table-column>

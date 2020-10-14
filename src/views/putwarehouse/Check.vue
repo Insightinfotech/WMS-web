@@ -78,12 +78,12 @@
                 </el-input>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="创建时间">
+            <el-table-column align="center" label="创建时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small">{{scope.row.createTime | dateTimeFormat}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="修改时间">
+            <el-table-column align="center" label="修改时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" v-if="scope.row.updateTime == null">暂无</el-tag>
                 <el-tag size="small" type="info" v-else>{{scope.row.updateTime |dateTimeFormat}}</el-tag>
@@ -108,7 +108,7 @@
                 </el-popconfirm>
                 <el-popconfirm confirmButtonText='好的' cancelButtonText='不用了' icon="el-icon-info" iconColor="#e3c048"
                   title="确定此盘点单进行盘点吗?" v-if="scope.row.status==4" @onConfirm="procurementPanDianZhong(scope.row.id)">
-                  <el-tooltip slot="reference" class="item" effect="dark" content="盘点中" placement="left">
+                  <el-tooltip slot="reference" class="item" effect="dark" content="开始盘点" placement="left">
                     <el-button type="text" icon="el-icon-loading" style="marginRight:5px" size="medium">
                     </el-button>
                   </el-tooltip>
@@ -262,6 +262,21 @@
         <el-button type="primary" @click="dialogVisiblePdAddDesc">保 存</el-button>
       </span>
     </el-dialog>
+    <!-- 提交审核驳回弹框 -->
+    <el-dialog title="请填写驳回理由" :visible.sync="dialogVisibleBohui" width="20%" @close="dialogVisibleBohuiq">
+      <el-form :model="ruleFormBohui" ref="ruleFormBohui" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="驳回理由" prop="overruledRemark" :rules="[{
+            required: true,
+            message: '请输入内容',
+            trigger: ['blur','change']
+          }]">
+          <el-input type="textarea" v-model="ruleFormBohui.overruledRemark"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="Bohuiq('ruleFormBohui')">提交驳回理由</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -296,6 +311,7 @@
         select: "",
         dialogVisible: false,
         dialogVisibleDesc: false,
+        dialogVisibleBohui: false,
         ruleForm: {
           code: "",
           remark: "",
@@ -308,7 +324,9 @@
           stockTakingRegions: []
         },
         stockTakingRegionVOS: [],
-        descId: ""
+        descId: "",
+        bohuiID: "",
+        ruleFormBohui:{}
       }
     },
     methods: {
@@ -318,7 +336,7 @@
           pageNum: this.pageNum,
           size: this.size
         }).then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.code === 0) {
             this.stockTakingVOS = res.data.stockTakingVOS
             // res.data.warehouseVOS[1].reservoirVOS[0].reservoirVOS[0]["reservoirVOS"] = []
@@ -532,9 +550,9 @@
               title: "删除成功",
               type: "success"
             })
-             if (this.stockTakingVOS.length === 1 && this.pageNum > 1) {
-                this.pageNum--
-              }
+            if (this.stockTakingVOS.length === 1 && this.pageNum > 1) {
+              this.pageNum--
+            }
             this.getCheckListData()
           } else {
             this.$notify({
@@ -741,6 +759,55 @@
           })
         })
       },
+      // 审核驳回
+      // 订单驳回理由
+      procurementBohui(id) {
+        this.bohuiID = id
+        this.dialogVisibleBohui = true
+      },
+      Bohuiq(ruleFormBohui) {
+        this.$refs[ruleFormBohui].validate((valid) => {
+          if (valid) {
+            this.$network.putwarehouse.check.checkstockupdateStatus({
+              id: this.bohuiID,
+              status: 3,
+              overruledRemark: this.ruleFormBohui.overruledRemark
+            }).then(res => {
+              // console.log(res);
+              if (res.code === 0) {
+                this.$notify({
+                  title: "驳回成功",
+                  type: "success"
+                })
+                this.getCheckListData()
+                this.dialogVisibleBohui = false
+              } else {
+                this.$notify({
+                  title: "失败",
+                  message: res.msg,
+                  type: "error"
+                })
+              }
+            }).catch(err => {
+              this.$notify({
+                title: "失败",
+                message: err,
+                type: "error"
+              })
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: "请填写完整信息",
+              showClose: true
+            })
+          }
+        })
+      },
+      dialogVisibleBohuiq() {
+        this.$refs["ruleFormBohui"].resetFields();
+        this.bohuiID = ""
+      },
       // 详情关闭回调
       dialogVisibleCloseDesc() {
         this.descId = ""
@@ -780,11 +847,11 @@
         }).then(res => {
           // console.log(res);
           if (res.code === 0) {
-            this.$notify({
-              title: "成功",
-              message: '查询成功',
-              type: "success",
-            });
+            // this.$notify({
+            //   title: "成功",
+            //   message: '查询成功',
+            //   type: "success",
+            // });
             this.stockTakingVOS = res.data.stockTakingVOS
             this.total = res.data.total
           } else {

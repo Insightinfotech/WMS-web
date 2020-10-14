@@ -59,7 +59,8 @@
             </el-table-column>
             <el-table-column prop="code" align="center" label="仓库编号" width="150">
               <template slot-scope="scope">
-                <el-button size="small" type="text">{{scope.row.code}}</el-button>
+                <!-- <el-button size="small" type="text">{{scope.row.code}}</el-button> -->
+                <el-link type="primary" :underline="false">{{scope.row.code}}</el-link>
               </template>
             </el-table-column>
             <el-table-column prop="name" align="center" label="仓库名称" width="150">
@@ -90,12 +91,12 @@
                 <el-tag size="small" type="danger">{{scope.row.manager}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="创建时间" width="180">
+            <el-table-column align="center" label="创建时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" type="success">{{scope.row.createTime | dateTimeFormat}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="修改时间" width="180">
+            <el-table-column align="center" label="修改时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" v-if="scope.row.updateTime == null">暂无</el-tag>
                 <el-tag size="small" type="info" v-else> {{scope.row.updateTime | dateTimeFormat}}</el-tag>
@@ -103,7 +104,7 @@
             </el-table-column>
             <!-- <el-table-column prop="address" align="center" label="备注">
             </el-table-column> -->
-            <el-table-column prop="address" align="center" label="操作" width="300">
+            <el-table-column align="center" label="操作" width="280">
               <template slot-scope="scope">
                 <el-button icon="el-icon-menu" size="mini" type="primary" @click="managementSearchKuqu(scope.row.id)">查看
                 </el-button>
@@ -301,7 +302,7 @@
               trigger: ['blur', 'change']
             },
             {
-              pattern: /1[34578][012356789]\d{8}/,
+              pattern: /^1[3456789]\d{9}$/,
               message: '请輸入正确的格式',
               trigger: ['blur', 'change']
             }
@@ -334,7 +335,7 @@
               trigger: ['blur', 'change']
             },
             {
-              pattern: /^(13[0-9]|15[0|1|3|6|7|8|9]|18[8|9])\d{8}$/,
+              pattern: /^1[3456789]\d{9}$/,
               message: '请輸入正确的格式',
               trigger: ['blur', 'change']
             }
@@ -676,16 +677,16 @@
           code: p2 == '' ? null : p2,
           name: p1 == "" ? null : p1
         }).then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code === 0) {
             this.managementList = res.data.warehouseVOS
             this.total = res.data.total
 
-            this.$notify({
-              title: "成功",
-              message: "查询成功",
-              type: "success"
-            })
+            // this.$notify({
+            //   title: "成功",
+            //   message: "查询成功",
+            //   type: "success"
+            // })
           } else {
             this.$notify({
               title: "失败",
@@ -712,6 +713,10 @@
 </script>
 <style lang="scss" scoped>
   .management {
+    .el-link {
+      font-size: 12px;
+    }
+
     .dialogVisibleSearchkuqu {
       display: flex;
 
@@ -735,7 +740,7 @@
     }
 
     .input-with-input {
-      width: 10%;
+      width: 12%;
       margin-right: 30px;
     }
 

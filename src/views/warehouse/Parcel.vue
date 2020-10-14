@@ -67,7 +67,8 @@
             </el-table-column>
             <el-table-column prop="code" align="center" label="货架编码">
               <template slot-scope="scope">
-                <el-button size="small" type="text">{{scope.row.code}}</el-button>
+                <!-- <el-button size="small" type="text">{{scope.row.code}}</el-button> -->
+                <el-link type="primary" :underline="false">{{scope.row.code}}</el-link>
               </template>
             </el-table-column>
             <el-table-column prop="name" align="center" label="货架名称">
@@ -98,13 +99,13 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="创建时间" width="180">
+            <el-table-column align="center" label="创建时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" v-if="scope.row.createTime == null">暂无</el-tag>
                 <el-tag size="small" v-else type="success">{{scope.row.createTime | dateTimeFormat}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="修改时间" width="180">
+            <el-table-column align="center" label="修改时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" v-if="scope.row.updateTime == null">暂无</el-tag>
                 <el-tag size="small" type="info" v-else> {{scope.row.updateTime | dateTimeFormat}}</el-tag>
@@ -261,7 +262,7 @@
           pageNum: this.pageNum,
           size: this.size
         }).then(res => {
-          console.log(res);
+          // console.log(res);
           if (res.code === 0) {
             this.parcelListData = res.data.shelvesVOS
             this.total = res.data.total
@@ -403,11 +404,11 @@
           if (res.code === 0) {
             this.parcelListData = res.data.shelvesVOS
             this.total = res.data.total
-            this.$notify({
-              title: "成功",
-              message: "查询成功",
-              type: "success"
-            })
+            // this.$notify({
+            //   title: "成功",
+            //   message: "查询成功",
+            //   type: "success"
+            // })
           } else {
             this.$notify({
               title: "失败",
@@ -554,6 +555,9 @@
 </script>
 <style lang="scss" scoped>
   .parcel {
+     .el-link {
+      font-size: 12px;
+    }
     .rolesexpand {
       div {
         margin-bottom: 10px;

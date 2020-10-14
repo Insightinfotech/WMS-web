@@ -63,7 +63,8 @@
             </el-table-column>
             <el-table-column prop="code" align="center" label="库区编码">
               <template slot-scope="scope">
-                <el-button size="small" type="text">{{scope.row.code}}</el-button>
+                <!-- <el-button size="small" type="text">{{scope.row.code}}</el-button> -->
+                <el-link type="primary" :underline="false">{{scope.row.code}}</el-link>
               </template>
             </el-table-column>
             <el-table-column prop="name" align="center" label="库区名称">
@@ -97,18 +98,18 @@
                 <el-button size="small" type="text">{{scope.row.category.name}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="创建时间" width="180">
+            <el-table-column align="center" label="创建时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" type="success">{{scope.row.createTime | dateTimeFormat}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="修改时间" width="180">
+            <el-table-column align="center" label="修改时间" width="190">
               <template slot-scope="scope">
                 <el-tag size="small" v-if="scope.row.updateTime == null">暂无</el-tag>
                 <el-tag size="small" type="info" v-else> {{scope.row.updateTime | dateTimeFormat}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="address" align="center" label="操作" width="300">
+            <el-table-column align="center" label="操作" width="270">
               <template slot-scope="scope">
                 <el-button icon="el-icon-menu" size="mini" type="primary" @click="reservoirSearchHoujia(scope.row.id)">
                   查看</el-button>
@@ -130,14 +131,14 @@
     <!-- 添加库区 -->
     <el-dialog title="添加库区" @close="addreservoirClose" :visible.sync="dialogVisible" width="25%">
       <el-form :model="addreservoir" ref="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="仓库编号" prop="code">
+        <el-form-item label="库区编号" prop="code">
           <el-input v-model="addreservoir.code" style="width:60%"></el-input>
           <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjia">点击生成</el-button>
         </el-form-item>
-        <el-form-item label="仓库名称" prop="name">
+        <el-form-item label="库区名称" prop="name">
           <el-input v-model="addreservoir.name" style="width:65%"></el-input>
         </el-form-item>
-        <el-form-item label="仓库面积" prop="acreage">
+        <el-form-item label="库区面积" prop="acreage">
           <el-input v-model="addreservoir.acreage" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="所属仓库" prop="warehouseId">
@@ -163,14 +164,14 @@
     <el-dialog title="编辑库区" @close="addreservoirCloseEdit" :visible.sync="dialogVisibleEdit" width="25%">
       <el-form :model="addreservoirEdit" ref="ruleFormEdit" :rules="rulesEdit" label-width="100px"
         class="demo-ruleForm">
-        <el-form-item label="仓库编号" prop="code">
+        <el-form-item label="库区编号" prop="code">
           <el-input v-model="addreservoirEdit.code" style="width:60%"></el-input>
           <el-button type="success" round size="small" style="marginLeft:20px" @click="dianjiaEDit">点击生成</el-button>
         </el-form-item>
-        <el-form-item label="仓库名称" prop="name">
+        <el-form-item label="库区名称" prop="name">
           <el-input v-model="addreservoirEdit.name" style="width:65%"></el-input>
         </el-form-item>
-        <el-form-item label="仓库面积" prop="acreage">
+        <el-form-item label="库区面积" prop="acreage">
           <el-input v-model="addreservoirEdit.acreage" style="width:65%"></el-input>
         </el-form-item>
         <el-form-item label="所属仓库" prop="warehouseId">
@@ -606,11 +607,11 @@
           if (res.code === 0) {
             this.ReservoirList = res.data.reservoirVOS
             this.total = res.data.total
-            this.$notify({
-              title: "成功",
-              message: "查询成功",
-              type: "success"
-            })
+            // this.$notify({
+            //   title: "成功",
+            //   message: "查询成功",
+            //   type: "success"
+            // })
           } else {
             this.$notify({
               title: "失败",
@@ -682,6 +683,10 @@
 </script>
 <style lang="scss" scoped>
   .reservoir {
+    .el-link {
+      font-size: 12px;
+    }
+
     .dialogVisibleSearchkuqu {
       display: flex;
 

@@ -102,14 +102,15 @@
               text: "基础信息管理"
             },
             menuItemGroups: [{
-              menuItems: [{
-                  index: "/home/basic/material",
-                  route: {
-                    path: "/home/basic/material"
-                  },
-                  itemsIcon: "el-icon-menu",
-                  text: "物料管理"
-                },
+              menuItems: [
+                // {
+                //   index: "/home/basic/material",
+                //   route: {
+                //     path: "/home/basic/material"
+                //   },
+                //   itemsIcon: "el-icon-menu",
+                //   text: "物料管理"
+                // },
                 {
                   index: "/home/basic/product",
                   route: {
@@ -144,14 +145,14 @@
                   itemsIcon: "el-icon-menu",
                   text: "库存管理"
                 },
-                {
-                  index: "/home/putwarehouse/orderlist",
-                  route: {
-                    path: "/home/putwarehouse/orderlist"
-                  },
-                  itemsIcon: "el-icon-menu",
-                  text: "订单管理"
-                },
+                // {
+                //   index: "/home/putwarehouse/orderlist",
+                //   route: {
+                //     path: "/home/putwarehouse/orderlist"
+                //   },
+                //   itemsIcon: "el-icon-menu",
+                //   text: "订单管理"
+                // },
                 {
                   index: "/home/putwarehouse/procurement",
                   route: {
