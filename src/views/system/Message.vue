@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import pufu from "../../assets/images/shemu01.jpg";
+import pufu from "../../assets/images/shenmu01.jpg";
 export default {
   data() {
     return {
