@@ -1,46 +1,53 @@
 <template>
-  <div class="login">
+  <div class="register">
     <el-card class="box-card">
-      <h2>系统登录</h2>
-      <el-form :model="userForm" size="small" ref="ruleForm" label-width="80px" class="demo-ruleForm" :rules="rules"
+      <h2>企业登录</h2>
+      <el-form :model="userForm" ref="ruleForm" size="small" label-width="80px" class="demo-ruleForm" :rules="rules"
         :status-icon="true">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="userForm.username"></el-input>
+        <el-form-item label="企业名称" prop="name">
+          <el-input v-model="userForm.name"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="userForm.password" show-password
             @keyup.native.enter="submitForm('ruleForm')"></el-input>
         </el-form-item>
         <div style="marginBottom:10px">
-          <router-link to="/enterpriselogin" class="links">企业登录</router-link>
+          <span>
+            <router-link class="links" to="/register">无账号请注册</router-link>
+          </span>
+          <span>
+            <router-link class="links" to="/login">个人登录</router-link>
+          </span>
         </div>
-        <el-button type="info" size="small" @click="resetForm('ruleForm')">重置</el-button>
-        <el-button class="addlogin" size="small" style="margin-right:0px" type="primary"
+        <el-button size="small" type="info" @click="resetForm('ruleForm')">重置</el-button>
+        <el-button size="small" class="addlogin" style="margin-right:0px" type="primary"
           @click="submitForm('ruleForm')">登录
         </el-button>
 
       </el-form>
     </el-card>
+
   </div>
 </template>
+
 <script>
   export default {
     data() {
       return {
         userForm: {
-          username: "",
+          name: "",
           password: ""
         },
         rules: {
-          username: [{
+          name: [{
               required: true,
-              message: '请输入用户名称',
+              message: '请输入企业名称',
               trigger: 'blur'
             },
             {
               min: 2,
-              max: 16,
-              message: '长度在 2 到 16 个字符',
+              max: 32,
+              message: '长度在 2 到 32 个字符',
               trigger: ['blur', 'change']
             }
           ],
@@ -66,25 +73,17 @@
       },
       //提交表单
       submitForm(formName) {
-        
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$network.userLogin(this.userForm).then(res => {
-              // console.log(res);
+            this.$network.enterpriseLogin(this.userForm).then(res => {
+              console.log(res);
               if (res.code === 0) {
                 this.$notify({
-                  title: "登录成功",
+                  title: "企业登录成功",
                   type: "success"
                 })
-                let {
-                  token
-                } = res.data
-                let {
-                  username
-                } = res.data
-                this.$store.commit("startuserToken", token)
-                this.$store.commit("getuser", username)
-                this.$router.push('/home')
+                this.$store.commit("startuserqiyeToken", res.data.token)
+                this.$router.push("/login")
               } else {
                 this.$notify({
                   title: "失败",
@@ -93,7 +92,6 @@
                 })
               }
             }).catch(err => {
-              // console.log(err);
               this.$notify({
                 title: "失败",
                 message: err,
@@ -109,16 +107,18 @@
           }
         })
       }
-    }
-
+    },
   }
 
 </script>
+
 <style lang="scss" scoped>
-  .login {
+  .register {
     position: relative;
     height: 100%;
     background-color: slategrey;
+
+
 
     .box-card {
       width: 18%;
@@ -129,16 +129,20 @@
       background-color: #eee;
 
       h2 {
+
         text-align: center;
         margin: 0 0 25px 0;
       }
 
-      .links {
+      span {
         display: block;
+        margin-bottom: 10px;
+      }
+
+      .links {
         font-size: 14px;
         text-decoration: none;
         color: #175199;
-        margin-bottom: 15px;
       }
 
       .el-form {

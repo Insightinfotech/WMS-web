@@ -95,7 +95,7 @@
                   </el-button>
                 </el-tooltip>
                 <el-popconfirm confirmButtonText='好的' cancelButtonText='不用了' icon="el-icon-info" iconColor="#e3c048"
-                  title="确定提交采购订单进行审核吗?" v-if="scope.row.status == 3 || scope.row.count!==null && scope.row.status == 1"
+                  title="确定提交采购订单进行审核吗?" v-if="scope.row.status == 3 ||  scope.row.status == 1"
                   @onConfirm="procurementShenHe(scope.row.id)">
                   <el-tooltip slot="reference" class="item" effect="dark" content="采购单审核" placement="left">
                     <el-button type="info" style="marginRight:5px" icon="el-icon-s-order" size="mini">
@@ -175,6 +175,9 @@
       <el-button size="mini" type="primary" style="marginBottom:10px" @click="procurementAddkuqu"
         :disabled="ruleFormEditRuku.status == 2  ? true: ruleFormEditRuku.status == 4?true :ruleFormEditRuku.status == 5?true:false">
         添加</el-button>
+      <el-button size="mini" type="primary" style="marginBottom:10px" @click="procurementAddkuqusm"
+        :disabled="ruleFormEditRuku.status == 2  ? true: ruleFormEditRuku.status == 4?true :ruleFormEditRuku.status == 5?true:false">
+        扫码添加</el-button>
       <el-card>
         <el-table :data="purchaseDetailVOS" border style="width: 100%">
           <el-table-column type="index" align="center" label="#">
@@ -231,7 +234,7 @@
       </el-card>
     </el-dialog>
     <!-- 添加采购入库弹框 -->
-    <el-dialog title="添加采购产品" :visible.sync="dialogVisibleAddkuqu" width="25%" @close="dialogVisibleAddkuquClose">
+    <el-dialog title="添加采购产品" :visible.sync="dialogVisibleAddkuqu" width="20%" @close="dialogVisibleAddkuquClose">
       <el-form :model="ruleFormSku" ref="ruleFormSku" label-width="100px" class="demo-ruleForm">
         <el-form-item label="产品" prop="companyId" :rules="[{
             required: true,
@@ -242,13 +245,13 @@
             :props="props">
           </el-cascader>
         </el-form-item>
-        <el-form-item label="价格" prop="price">
+        <el-form-item label="价格" prop="price" style="width:60%">
           <el-input disabled v-model="arrSku.price"></el-input>
         </el-form-item>
-        <el-form-item label="字典单位" prop="price">
+        <el-form-item label="字典单位" prop="price" style="width:80%">
           <el-input disabled v-model="arrSku.name"></el-input>
         </el-form-item>
-        <el-form-item label="预计数量" prop="estimatedQuantity" :rules="[{
+        <el-form-item label="预计数量" prop="estimatedQuantity" style="width:50%" :rules="[{
               required: true,
               message: '请输入数量',
               trigger: ['blur','change']
@@ -318,6 +321,39 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 扫码添加 -->
+    <el-dialog title="扫码添加采购产品" :visible.sync="dialogVisibleAddkuqusm" width="20%" @close="dialogVisibleAddkuquClosesm">
+      <el-form :model="ruleFormSkusm" ref="ruleFormSkusm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="产品编号" style="width:80%">
+          <el-input clearable v-model="ruleFormSkusm.name" @change="valuesm"></el-input>
+        </el-form-item>
+        <el-form-item label="产品" style="width:80%">
+          <el-input disabled v-model="skuVOData.skuName"></el-input>
+        </el-form-item>
+        <el-form-item label="价格" style="width:60%">
+          <el-input disabled v-model="skuVOData.price"></el-input>
+        </el-form-item>
+        <el-form-item label="字典单位" style="width:80%">
+          <el-input disabled v-model="skuVOData.categoryName"></el-input>
+        </el-form-item>
+        <el-form-item label="预计数量" prop="estimatedQuantity" style="width:50%"  :rules="[{
+              required: true,
+              message: '请输入数量',
+              trigger: ['blur','change']
+            },
+            {
+              pattern: /^[1-9]*[1-9][0-9]*$/,
+              message: '请輸入正确的数量',
+              trigger: ['blur','change']
+            }]">
+          <el-input v-model="ruleFormSkusm.estimatedQuantity" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleAddkuqusm = false">取 消</el-button>
+        <el-button type="primary" @click="procurementRukuSkusm('ruleFormSkusm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -342,6 +378,7 @@
         dialogVisibleAddkuqu: false,
         dialogVisibleAddkuquEdit: false,
         dialogVisibleBohui: false,
+        dialogVisibleAddkuqusm: false,
         ruleForm: {
           code: "",
           gestore: "",
@@ -371,7 +408,9 @@
         ruleFormBohui: {
           overruledRemark: ""
         },
-        bohuiID: ""
+        bohuiID: "",
+        ruleFormSkusm: {},
+        skuVOData: {}
       }
     },
     methods: {
@@ -475,6 +514,89 @@
                 })
                 this.dialogVisible = false
                 this.$refs[formName].resetFields();
+                this.getProcurementList()
+              } else {
+                this.$notify({
+                  title: "失败",
+                  message: res.msg,
+                  type: "error"
+                })
+              }
+            }).catch(err => {
+              this.$notify({
+                title: "失败",
+                message: err,
+                type: "error"
+              })
+            })
+          } else {
+            this.$message({
+              type: "error",
+              message: "请填写完整信息",
+              showClose: true
+            })
+          }
+        });
+      },
+      // 点击扫码添加
+      procurementAddkuqusm() {
+        this.dialogVisibleAddkuqusm = true
+      },
+      // 关闭扫码弹框
+      dialogVisibleAddkuquClosesm() {
+        this.skuVOData = {}
+        this.ruleFormSkusm = {}
+        this.$refs["ruleFormSkusm"].resetFields()
+      },
+      // 扫码获取产品
+      valuesm(val) {
+        // console.log(val);
+        if (val != "") {
+          this.$network.putwarehouse.gostorage.gostorageDetailEditIdSm({
+            code: val
+          }).then(res => {
+            console.log(res);
+            if (res.code === 0) {
+              // console.log(res);
+              this.skuVOData = res.data.skuInfoVO
+            } else {
+              this.$notify({
+                title: "失败",
+                message: res.msg,
+                type: "error"
+              })
+            }
+          }).catch(err => {
+            this.$notify({
+              title: "失败",
+              message: err,
+              type: "error"
+            })
+          })
+        }
+      },
+      // 扫码添加
+      procurementRukuSkusm(ruleFormSkusm) {
+        this.$refs[ruleFormSkusm].validate((valid) => {
+          if (valid) {
+            this.$network.putwarehouse.procurement.procurementSkuAdd({
+              purchaseId: this.rukuXiangQingId,
+              skuId: this.skuVOData.skuId,
+              companyId: this.skuVOData.supplierId,
+              price: this.skuVOData.price,
+              categoryId: this.skuVOData.categoryId,
+              estimatedQuantity: this.ruleFormSkusm.estimatedQuantity
+            }).then(res => {
+              // console.log(res);
+              if (res.code === 0) {
+                this.$notify({
+                  title: "成功",
+                  message: "添加采购产品成功",
+                  type: "success"
+                })
+                this.dialogVisibleAddkuqusm = false
+                this.$refs[ruleFormSkusm].resetFields();
+                this.procurementKuQuLists(this.rukuXiangQingId)
                 this.getProcurementList()
               } else {
                 this.$notify({

@@ -168,4 +168,44 @@ export function productId(
     })
   })
 }
-
+export function productTypeListDy(
+  skuId
+) {
+  return new Promise((resolve, reject) => {
+    Product.productTypeListDy(
+      skuId
+    ).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function productTypeListIdDy(
+  skuId
+) {
+  return new Promise((resolve, reject) => {
+    Product.productTypeListIdDy(
+      skuId
+    ).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function productTypeListIdBingDy(
+  id,
+  cid
+) {
+  return new Promise((resolve, reject) => {
+    Product.productTypeListIdBingDy(
+      id,
+      cid
+    ).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}

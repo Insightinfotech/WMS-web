@@ -213,4 +213,17 @@ export default class Gostorage {
       token: store.getters.userToken
     })
   }
+  static gostorageDetailEditIdSm({
+    code
+  }) {
+    return request({
+      url: `/sku/getSkuByCode`,
+      method: "GET",
+      params: {
+        code
+      }
+    }, {
+      token: store.getters.userToken
+    })
+  }
 }

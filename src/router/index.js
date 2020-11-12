@@ -8,6 +8,7 @@ const routes = [{
     path: "/",
     redirect: "/login"
   },
+
   {
     path: '/home',
     name: 'Home',
@@ -19,6 +20,14 @@ const routes = [{
       {
         path: "/home/system/unit",
         component: () => import("../views/system/Unit")
+      },
+      {
+        path: "/home/system/about",
+        component: () => import("../views/system/Message")
+      },
+      {
+        path: "/home/system/warning",
+        component: () => import("../views/system/Warning")
       },
       {
         path: "/home/warehouse/management",
@@ -102,6 +111,22 @@ const routes = [{
     path: "/login",
     name: "Login",
     component: () => import("../views/Login.vue")
+  },
+  {
+    path: "/register",
+    component: () => import('../views/Register')
+  },
+  {
+    path: "/enterpriselogin",
+    component: () => import("../views/RegisterUser.vue")
+  },
+  {
+    path: "/adminlogin",
+    component: () => import("../views/Admin.vue")
+  },
+  {
+    path: "/adminlist",
+    component: () => import("../views/admin/AdminList")
   }
 ]
 
@@ -111,9 +136,17 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-  if (to.path == "/login") return next()
+  if (to.path == "/login" || to.path == "/register" || to.path == "/enterpriselogin" || to.path == "/adminlogin" || to.path == "/adminlist") {
+    return next()
+  }
+
+
   let token = sessionStorage.getItem("token")
-  if (!token) return next("/login")
+
+  if (!token) {
+    return next("/login")
+  }
+
   next()
 })
 export default router

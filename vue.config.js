@@ -21,5 +21,8 @@ module.exports = {
         args[0].title = process.env.SITE_NAME;
         return args;
       });
+  },
+  devServer: {
+    port: 8888,
   }
 }

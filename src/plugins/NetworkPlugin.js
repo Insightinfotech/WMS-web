@@ -1,5 +1,11 @@
 import {
-  userLogin
+  userLogin,
+  businessRegistration,
+  enterpriseLogin,
+  adminLogin,
+  adminLoginToken,
+  adminGetList,
+  adminIsCheck
 } from "api/helpers/login/login"
 import {
   addUser,
@@ -22,6 +28,16 @@ import {
   unitTypeEdit,
   unitUserAddEdit
 } from "api/helpers/home/unit"
+import {
+  getListData,
+  getSkuListData,
+  createSkuList,
+  deleteSkuListId,
+  createSkuListEchoId,
+  createSkuListEchoAdd,
+  getAdminListData,
+  getAdminListDataRoles
+} from "api/helpers/home/warning"
 import {
   getManagementList,
   managementAdd,
@@ -70,7 +86,10 @@ import {
   productAdd,
   productAddUpdate,
   productDelete,
-  productId
+  productId,
+  productTypeListDy,
+  productTypeListIdDy,
+  productTypeListIdBingDy
 } from "api/helpers/basic/product"
 import {
   inventoryList
@@ -100,7 +119,8 @@ import {
   gostorageDetailDelete,
   gostorageDetailEditId,
   stockInDetailAddEdit,
-  gostorageListstockInLog
+  gostorageListstockInLog,
+  gostorageDetailEditIdSm
 } from "api/helpers/putwarehouse/gostorage"
 import {
   OutboundList,
@@ -157,6 +177,12 @@ class NetworkPlugin {
   install(Vue) {
     Vue.prototype.$network = {
       userLogin,
+      businessRegistration,
+      enterpriseLogin,
+      adminLogin,
+      adminLoginToken,
+      adminGetList,
+      adminIsCheck,
       home: {
         roles: {
           addUser,
@@ -178,6 +204,16 @@ class NetworkPlugin {
           unitSearchName,
           unitTypeEdit,
           unitUserAddEdit
+        },
+        warning: {
+          getListData,
+          getSkuListData,
+          createSkuList,
+          deleteSkuListId,
+          createSkuListEchoId,
+          createSkuListEchoAdd,
+          getAdminListData,
+          getAdminListDataRoles
         }
       },
       warehouse: {
@@ -231,7 +267,10 @@ class NetworkPlugin {
           productAdd,
           productAddUpdate,
           productDelete,
-          productId
+          productId,
+          productTypeListDy,
+          productTypeListIdDy,
+          productTypeListIdBingDy
         }
       },
       putwarehouse: {
@@ -263,7 +302,8 @@ class NetworkPlugin {
           gostorageDetailDelete,
           gostorageDetailEditId,
           stockInDetailAddEdit,
-          gostorageListstockInLog
+          gostorageListstockInLog,
+          gostorageDetailEditIdSm
         },
         outbound: {
           OutboundList,

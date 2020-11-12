@@ -14,14 +14,16 @@ export default class Roles {
    */
   static addUser({
     username,
-    password
+    password,
+    phone
   }) {
     return request({
       url: "/user/create",
       method: "POST",
       data: {
         username,
-        password
+        password,
+        phone
       }
     }, {
       token: store.getters.userToken
@@ -138,13 +140,13 @@ export default class Roles {
       token: store.getters.userToken
     })
   }
-  static editUser(id,username,roleIds) {
+  static editUser(id,phone,roleIds) {
     return request({
       url: "/user/update",
       method: "PUT",
       data: {
         id,
-        username,
+        phone,
         roleIds
       }
     }, {

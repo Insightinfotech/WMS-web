@@ -20,6 +20,8 @@ Vue.filter('dateTimeFormat', (val) => {
   return date.toLocaleString() || "非法日期"
 })
 
+import VueBarcode from '@xkeshi/vue-barcode'; //导入条形码插件
+Vue.component('barcode', VueBarcode);
 Vue.config.productionTip = false
 
 new Vue({

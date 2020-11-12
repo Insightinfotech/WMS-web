@@ -14,7 +14,9 @@ export default new Vuex.Store({
     loadingInstance: null,
     // 用户token
     token: JSON.parse(sessionStorage.getItem("token")),
-    username: JSON.parse(sessionStorage.getItem("username"))
+    username: JSON.parse(sessionStorage.getItem("username")),
+    qiyeToken: JSON.parse(sessionStorage.getItem("qiyeToken")),
+    admintoken:JSON.parse(sessionStorage.getItem("admintoken"))
   },
   mutations: {
     // 用户token
@@ -26,6 +28,16 @@ export default new Vuex.Store({
       state.username = username
       sessionStorage.setItem("username", JSON.stringify(username))
 
+    },
+    // 企业token
+    startuserqiyeToken(state, token) {
+      state.qiyeToken = token
+      sessionStorage.setItem("qiyeToken", JSON.stringify(token))
+    },
+    // admin token
+    startuserqiyeadminToken(state, token) {
+      state.admintoken = token
+      sessionStorage.setItem("admintoken", JSON.stringify(token))
     },
     clearToken(state) {
       state.token = ""
@@ -61,6 +73,12 @@ export default new Vuex.Store({
   getters: {
     userToken(state) {
       return state.token
+    },
+    qiyeToken(state) {
+      return state.qiyeToken
+    },
+    adminToken(state) {
+      return state.admintoken
     }
   }
 })

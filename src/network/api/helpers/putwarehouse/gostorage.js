@@ -235,3 +235,16 @@ export function gostorageListstockInLog({
     })
   })
 }
+export function gostorageDetailEditIdSm({
+  code
+}) {
+  return new Promise((resolve, reject) => {
+    Gostorage.gostorageDetailEditIdSm({
+      code
+    }).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}

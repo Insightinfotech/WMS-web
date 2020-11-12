@@ -255,6 +255,9 @@
       <el-button
         :disabled="stockInVOStatus==2?true:stockInVOStatus==4?true:stockInVOStatus==5?true :stockInVOStatus==6?true:stockInVOStatus==7?true:false"
         type="primary" size="mini" style="marginBottom:10px" @click="stockInDetailAdd">添加</el-button>
+      <el-button
+        :disabled="stockInVOStatus==2?true:stockInVOStatus==4?true:stockInVOStatus==5?true :stockInVOStatus==6?true:stockInVOStatus==7?true:false"
+        type="primary" size="mini" style="marginBottom:10px" @click="stockInDetailAddsm">扫码添加</el-button>
       <!-- 打印 -->
       <el-card>
         <el-table id="printMe" :data="stockOutDetailVOS" border style="width: 100%">
@@ -391,6 +394,30 @@
         <el-button type="primary" @click="dialogVisiblewuliuAdd('ruleFormwuliu')">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 扫码添加 -->
+    <el-dialog title="扫码添加" :visible.sync="dialogVisibleDetailAddsm" width="20%" @close="dialogVisibleDetailAddClosesm">
+      <el-form :model="smdata" ref="ruleFormDetailAddsm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="产品编号">
+          <el-input v-model="smdata.names" @change="valuesm" clearable></el-input>
+        </el-form-item>
+
+        <el-form-item label="产品" prop="name" style="width:80%">
+          <el-input disabled v-model="skuVOData.skuName"></el-input>
+        </el-form-item>
+        <el-form-item label="字典单位" prop="name" style="width:60%">
+          <el-input disabled v-model="skuVOData.categoryName"></el-input>
+        </el-form-item>
+        <el-form-item label="数量" prop="quantity" style="width:50%"
+          :rules="[{ required: true, message: '请输入数量', trigger: ['blur','change'] },{pattern: /^[0-9]*$/, message: '请输入正确的数量', trigger: ['blur', 'change']}]">
+          <el-input v-model="smdata.quantity"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleDetailAddsm = false">取 消</el-button>
+        <el-button type="primary" @click="detailAddSkussm('ruleFormDetailAddsm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -415,6 +442,7 @@
         dialogVisibleDetailAdd: false,
         dialogVisibleBohui: false,
         dialogVisiblewuliu: false,
+        dialogVisibleDetailAddsm: false,
         outboundFormdata: {
           code: "",
           type: "",
@@ -450,7 +478,9 @@
         ruleFormwuliu: {
 
         },
-        wuliuId: ""
+        wuliuId: "",
+        smdata: {},
+        skuVOData: {}
       };
     },
     methods: {
@@ -886,6 +916,83 @@
             });
           }
         });
+      },
+      // 扫码弹框关闭
+      dialogVisibleDetailAddClosesm() {
+        this.smdata = {}
+        this.skuVOData = {}
+        this.$refs["ruleFormDetailAddsm"].resetFields();
+      },
+      // 扫码开启弹框
+      stockInDetailAddsm() {
+        this.dialogVisibleDetailAddsm = true
+      },
+      // 扫码添加
+      detailAddSkussm(ruleFormDetailAddsm) {
+        this.$refs[ruleFormDetailAddsm].validate((valid) => {
+          if (valid) {
+            this.$network.putwarehouse.outbound
+              .stockOutDetailCreate({
+                stockOutId: this.stockOutId,
+                skuId: this.skuVOData.skuId,
+                estimatedQuantity: this.smdata.quantity,
+                categoryId: this.skuVOData.categoryId,
+              })
+              .then((res) => {
+                // console.log(res);
+                if (res.code === 0) {
+                  this.$notify({
+                    title: "成功",
+                    message: "添加产品成功",
+                    type: "success",
+                  });
+                  this.dialogVisibleDetailAddsm = false;
+                  this.$refs[ruleFormDetailAddsm].resetFields();
+                  this.stockInDetail(this.stockOutId);
+                } else {
+                  this.$notify({
+                    title: "失败",
+                    message: res.msg,
+                    type: "error",
+                  });
+                }
+              })
+              .catch((err) => {
+                this.$notify({
+                  title: "失败",
+                  message: err,
+                  type: "error",
+                });
+              });
+          }
+        })
+      },
+      // 扫码获取产品
+      valuesm(val) {
+        // console.log(val);
+        if (val != "") {
+          this.$network.putwarehouse.gostorage.gostorageDetailEditIdSm({
+            code: val
+          }).then(res => {
+            console.log(res);
+            if (res.code === 0) {
+              // console.log(res);
+              this.skuVOData = res.data.skuInfoVO
+            } else {
+              this.$notify({
+                title: "失败",
+                message: res.msg,
+                type: "error"
+              })
+            }
+          }).catch(err => {
+            this.$notify({
+              title: "失败",
+              message: err,
+              type: "error"
+            })
+          })
+        }
       },
       // 点击编辑回显
       procurementSkuEdit(id) {

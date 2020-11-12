@@ -42,7 +42,10 @@
                         <el-tag size="mini" type="info">创建时间</el-tag> {{scope.row.createTime|dateTimeFormat}}
                       </div>
                       <div>
-                        <el-tag size="mini" type="info">更新时间</el-tag> {{scope.row.updateTime|dateTimeFormat}}
+                        <el-tag size="mini" type="info">更新时间</el-tag>
+                        <span v-if="scope.row.updateTime == null">暂无</span>
+                        <span v-else>{{scope.row.updateTime|dateTimeFormat}}</span>
+                        <!-- {{(scope.row.updateTime == null ? "":scope.row.updateTime=='Invalid Date'?'':scope.row.updateTime)|dateTimeFormat}} -->
                       </div>
                     </div>
                   </template>
@@ -123,7 +126,20 @@
       <div v-else>
         <el-form :model="editData" label-width="100px" class="demo-ruleForm">
           <el-form-item label="用户名" prop="username">
-            <el-input v-model="editData.username"></el-input>
+            <el-input disabled v-model="editData.username"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" prop="phone" :rules="[{
+              required: true,
+              message: '请输入手机号码',
+              trigger: ['blur', 'change']
+            },
+            {
+              pattern: /^1[3456789]\d{9}$/,
+              message: '请輸入正确的格式',
+              trigger: ['blur', 'change']
+            }
+          ]">
+            <el-input  v-model="editData.phone"></el-input>
           </el-form-item>
           <!-- <el-form-item label="密码" prop="password">
             <el-input v-model="editData.password" type="password" show-password></el-input>
@@ -150,6 +166,9 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="adduserForm.password" type="password" show-password></el-input>
         </el-form-item>
+        <el-form-item label="手机号码" prop="phone">
+          <el-input v-model="adduserForm.phone"></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleuseradd = false">取 消</el-button>
@@ -168,31 +187,43 @@
         dialogVisibleuseradd: false,
         adduserForm: {
           username: "",
-          password: ""
+          password: "",
+          phone: ""
         },
         rules: {
           username: [{
               required: true,
               message: '请输入用户名称',
-              trigger: ['blur','change']
+              trigger: ['blur', 'change']
             },
             {
               min: 2,
               max: 16,
               message: '长度在 2 到 16 个字符',
-              trigger: ['blur','change']
+              trigger: ['blur', 'change']
             }
           ],
           password: [{
               required: true,
               message: '请输入用户密码',
-              trigger: ['blur','change']
+              trigger: ['blur', 'change']
             },
             {
               min: 6,
               max: 18,
               message: '长度在 6 到 18 个字符',
-              trigger: ['blur','change']
+              trigger: ['blur', 'change']
+            }
+          ],
+          phone: [{
+              required: true,
+              message: '请输入手机号码',
+              trigger: ['blur', 'change']
+            },
+            {
+              pattern: /^1[3456789]\d{9}$/,
+              message: '请輸入正确的格式',
+              trigger: ['blur', 'change']
             }
           ],
         },
@@ -468,7 +499,6 @@
         this.checkList = []
         this.rolesId = ""
         this.getuserlist()
-
       },
       // 分页
       handleSizeChange(newsize) {
@@ -482,10 +512,10 @@
       // 编辑添加sd
       edituserRoles() {
         let id = this.rolesId
-        let username = this.editData.username
+        let phone = this.editData.phone
         let roleIds = this.checkList
         // console.log(id, username,roleIds);
-        this.$network.home.roles.editUser(id, username, roleIds).then(res => {
+        this.$network.home.roles.editUser(id, phone, roleIds).then(res => {
           // console.log(res);
           if (res.code === 0) {
             this.$notify({

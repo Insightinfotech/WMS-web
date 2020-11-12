@@ -2,9 +2,10 @@ import store from "../../store/index"
 import Axios from "axios"
 
 function request(config, headers) {
+  
   const instance = Axios.create({
     baseURL: process.env.VUE_APP_SERVER_BASE_URL,
-    timeout: 3000,
+    timeout: 7000,
     headers: {
       "Content-Type": "application/json"
     },
@@ -13,16 +14,18 @@ function request(config, headers) {
     },
   })
   instance.interceptors.request.use(config => {
+    // console.log(config);
     store.commit("updateApiCount", "add")
     if (headers) {
       Object.assign(config.headers, headers)
     }
     setTimeout(() => {
       store.commit("updateApiCount", "sub")
-    }, 3000);
+    }, 7000);
     return config
   })
   instance.interceptors.response.use(res => {
+    // console.log(res);
     store.commit("updateApiCount", "sub")
     return res.data
   })

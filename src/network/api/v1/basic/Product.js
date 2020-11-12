@@ -157,4 +157,38 @@ export default class Product {
       token: store.getters.userToken
     })
   }
+  static productTypeListDy(
+    skuId
+  ) {
+    return request({
+      url: `/sku/getBarCode/${skuId}`,
+      method: "GET",
+      responseType: 'arraybuffer'
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static productTypeListIdDy(
+    skuId
+  ) {
+    return request({
+      url: `/sku/getSkuCompany/${skuId}`,
+      method: "GET",
+    }, {
+      token: store.getters.userToken
+    })
+  }
+  static productTypeListIdBingDy(
+    id,
+    cid
+  ) {
+    return request({
+      url: `/sku/getBarCode/${id}/${cid}`,
+      method: "GET",
+      responseType: 'arraybuffer'
+    }, {
+      token: store.getters.userToken
+    })
+  }
+
 }

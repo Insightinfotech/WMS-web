@@ -11,12 +11,14 @@ import Roles from "../../v1/home/roles"
  */
 export function addUser({
   username,
-  password
+  password,
+  phone
 }) {
   return new Promise((resolve, reject) => {
     Roles.addUser({
       username,
-      password
+      password,
+      phone
     }).then(res => {
       resolve(res)
     }).catch(err => {
@@ -130,9 +132,9 @@ export function removeUserId(uid) {
     })
   })
 }
-export function editUser(id,username,roleIds) {
+export function editUser(id, phone, roleIds) {
   return new Promise((resolve, reject) => {
-    Roles.editUser(id,username,roleIds).then(res => {
+    Roles.editUser(id, phone, roleIds).then(res => {
       resolve(res)
     }).catch(err => {
       reject(err)
