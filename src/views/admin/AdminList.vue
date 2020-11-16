@@ -29,6 +29,12 @@
                 </el-switch>
               </template>
             </el-table-column>
+            <el-table-column prop="content" label="企业介绍" align="center">
+              <template slot-scope="scope">
+              
+                <el-input type="textarea" :rows="1" size="mini" disabled v-model="scope.row.content"></el-input>
+              </template>
+            </el-table-column>
             <el-table-column align="center" label="创建时间">
               <template slot-scope="scope">
                 <el-tag size="small">{{scope.row.gmtCreate}}</el-tag>

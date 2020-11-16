@@ -17,13 +17,17 @@ export function userLogin({
 export function businessRegistration({
   name,
   password,
-  phone
+  phone,
+  content,
+  code
 }) {
   return new Promise((resolve, reject) => {
     user.businessRegistration({
       name,
       password,
-      phone
+      phone,
+      content,
+      code
     }).then(res => {
       resolve(res)
     }).catch(err => {
@@ -97,6 +101,19 @@ export function adminIsCheck({
     user.adminIsCheck({
       id,
       isCheck
+    }).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+export function businessRegistrationPhone({
+  phone
+}) {
+  return new Promise((resolve, reject) => {
+    user.businessRegistrationPhone({
+      phone
     }).then(res => {
       resolve(res)
     }).catch(err => {

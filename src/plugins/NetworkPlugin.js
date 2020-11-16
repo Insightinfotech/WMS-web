@@ -5,7 +5,8 @@ import {
   adminLogin,
   adminLoginToken,
   adminGetList,
-  adminIsCheck
+  adminIsCheck,
+  businessRegistrationPhone
 } from "api/helpers/login/login"
 import {
   addUser,
@@ -183,6 +184,7 @@ class NetworkPlugin {
       adminLoginToken,
       adminGetList,
       adminIsCheck,
+      businessRegistrationPhone,
       home: {
         roles: {
           addUser,

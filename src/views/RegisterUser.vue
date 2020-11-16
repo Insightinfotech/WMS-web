@@ -42,7 +42,7 @@
           name: [{
               required: true,
               message: '请输入企业名称',
-              trigger: 'blur'
+              trigger: ['blur', 'change']
             },
             {
               min: 2,
@@ -54,7 +54,7 @@
           password: [{
               required: true,
               message: '请输入用户密码',
-              trigger: 'blur'
+              trigger:['blur', 'change']
             },
             {
               min: 6,
@@ -117,7 +117,9 @@
     position: relative;
     height: 100%;
     background-color: slategrey;
-
+    background-image: url("../assets/images/Starry.jpg");
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
 
 
     .box-card {

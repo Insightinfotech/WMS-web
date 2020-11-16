@@ -30,7 +30,9 @@
    static businessRegistration({
      name,
      password,
-     phone
+     phone,
+     content,
+     code
    }) {
      return request({
        url: "/organization/create",
@@ -38,7 +40,9 @@
        params: {
          name,
          password,
-         phone
+         phone,
+         content,
+         code
        }
      }, {
        "Content-Type": "x-www-form-urlencoded"
@@ -117,6 +121,17 @@
      }, {
        "Content-Type": "x-www-form-urlencoded",
        admintoken: store.getters.adminToken
+     })
+   }
+   static businessRegistrationPhone({
+     phone
+   }) {
+     return request({
+       url: "/organization/verifyCode",
+       method: "GET",
+       params: {
+         phone
+       }
      })
    }
  }
